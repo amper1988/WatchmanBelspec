@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerFormCarListFromBase">
+    <TableView fx:id="tblSearchResult" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" opacity="0.75" tableMenuButtonVisible="true">
+        <columns>
+            <TableColumn fx:id="tbcProtocolNumber" prefWidth="90.0" resizable="false" sortable="false" text="№ протокола" />
+            <TableColumn fx:id="tbcManufacture" editable="false" prefWidth="145.0" resizable="false" sortable="false" text="Марка" />
+            <TableColumn fx:id="tbcCarId" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Рег.Знак" />
+            <TableColumn fx:id="tbcPoliceDepartment" editable="false" prefWidth="250.0" resizable="false" sortable="false" text="Район ГАИ" />
+            <TableColumn fx:id="tbcParkingDate" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Дата потановки" />
+            <TableColumn fx:id="tbcClause" editable="false" prefWidth="200.0" resizable="false" sortable="false" text="Статья" />
+         <TableColumn fx:id="tbcReleaseDate" editable="false" prefWidth="200.0" resizable="false" sortable="false" text="Дата выдачи" />
+         <TableColumn fx:id="tbcStatus" editable="false" prefWidth="200.0" resizable="false" sortable="false" text="Статус" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+</AnchorPane>

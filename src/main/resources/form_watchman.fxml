@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerFormWatchman">
+   <children>
+       <SplitPane dividerPositions="0.5" opacity="0.75" prefHeight="1713.0" prefWidth="1210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <items>
+              <AnchorPane>
+                 <children>
+                     <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="1711.0" prefWidth="601.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <items>
+                            <AnchorPane fx:id="ancpOnParking">
+                               <children>
+                                   <VBox prefHeight="852.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <children>
+                                          <HBox>
+                                             <children>
+                                                 <Label text="На стоянке ">
+                                                     <font>
+                                                         <Font size="20.0" />
+                                                     </font>
+                                                 </Label>
+                                             </children>
+                                              <VBox.margin>
+                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                              </VBox.margin>
+                                          </HBox>
+                                    <TextField fx:id="txtOnParkingSearch" promptText="Введите номер протокола или регистрационный знак и нажмите &quot;Ввод&quot;" />
+                                    <HBox>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                       <children>
+                                                  <Button fx:id="btnTookOnParking" mnemonicParsing="false" text="Принять на стоянку">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                                  <Button fx:id="btnReleaseFromParking" mnemonicParsing="false" text="Выдать со стоянки">
+                                             <HBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                              <TableView fx:id="tblCarOnParking" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2000.0" tableMenuButtonVisible="true">
+                                                  <columns>
+                                                      <TableColumn fx:id="tbcProtocolNumber" prefWidth="90.0" resizable="false" sortable="false" text="№ протокола" />
+                                                      <TableColumn fx:id="tbcManufacture" editable="false" prefWidth="145.0" resizable="false" sortable="false" text="Марка" />
+                                                      <TableColumn fx:id="tbcCarId" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Рег.Знак" />
+                                                      <TableColumn fx:id="tbcPoliceDepartment" editable="false" prefWidth="250.0" resizable="false" sortable="false" text="Район ГАИ" />
+                                                      <TableColumn fx:id="tbcParkingDate" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Дата потановки" />
+                                                      <TableColumn fx:id="tbcClause" editable="false" prefWidth="200.0" resizable="false" sortable="false" text="Статья" />
+                                                  </columns>
+                                          <columnResizePolicy>
+                                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                          </columnResizePolicy>
+                                              </TableView>
+                                      </children>
+                                   </VBox>
+                               </children>
+                            </AnchorPane>
+                            <AnchorPane fx:id="ancpReleased">
+                               <children>
+                                   <VBox prefHeight="851.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <children>
+                                          <HBox>
+                                             <children>
+                                                 <Label text="Выданные">
+                                                     <font>
+                                                         <Font size="20.0" />
+                                                     </font>
+                                                 </Label>
+                                             </children>
+                                              <VBox.margin>
+                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                              </VBox.margin>
+                                          </HBox>
+                                          <TextField fx:id="txtReleasedSearch" promptText="Введите номер протокола или регистрационный знак и нажмите &quot;Ввод&quot;" />
+                                           <TableView fx:id="tblReleasedCars" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2000.0">
+                                               <columns>
+                                                   <TableColumn fx:id="tbcProtocolNumberReleased" prefWidth="90.0" text="№ протокола" />
+                                                   <TableColumn fx:id="tbcManufactureReleased" prefWidth="145.0" text="Марка" />
+                                                   <TableColumn fx:id="tbcCarIdReleased" prefWidth="145.0" text="Рег знак" />
+                                                   <TableColumn fx:id="tbcParkingDateReleased" prefWidth="145.0" text="Дата потановки" />
+                                                   <TableColumn fx:id="tbcReleaseDateReleased" prefWidth="145.0" text="Дата выдачи" />
+                                               </columns>
+                                               <columnResizePolicy>
+                                                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                               </columnResizePolicy>
+                                           </TableView>
+                                      </children>
+                                   </VBox>
+                               </children>
+                            </AnchorPane>
+                        </items>
+                     </SplitPane>
+                 </children>
+              </AnchorPane>
+              <AnchorPane>
+                 <children>
+                     <SplitPane dividerPositions="0.4, 0.65, 0.9" orientation="VERTICAL" prefHeight="1711.0" prefWidth="601.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <items>
+                            <AnchorPane fx:id="ancpOnEvacuation">
+                               <children>
+                                   <VBox prefHeight="424.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <children>
+                                          <HBox>
+                                             <children>
+                                                 <Label text="На эвакуации">
+                                                     <font>
+                                                         <Font size="20.0" />
+                                                     </font>
+                                                 </Label>
+                                             </children>
+                                              <VBox.margin>
+                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                              </VBox.margin>
+                                          </HBox>
+                                          <TextField fx:id="txtOnEvacuationSearch" promptText="Введите номер протокола или регистрационный знак и нажмите &quot;Ввод&quot;" />
+                                           <TableView fx:id="tblCarsOnEvacuation" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2000.0">
+                                               <columns>
+                                                   <TableColumn fx:id="tbcProtocolNumberEvacuation" prefWidth="90" text="№ протокола" />
+                                                   <TableColumn fx:id="tbcManufactureEvacuation" prefWidth="145.0" text="Марка" />
+                                                   <TableColumn fx:id="tbcModelEvacuation" prefWidth="145.0" text="Модель" />
+                                                   <TableColumn fx:id="tbcCarIdEvacuation" prefWidth="145.0" text="Рег знак" />
+                                                   <TableColumn fx:id="tbcClauseEvacuation" prefWidth="200.0" text="Статья" />
+                                                   <TableColumn fx:id="tbcPoliceDepartmentEvacuation" prefWidth="250.0" text="Район ГАИ" />
+                                               </columns>
+                                               <columnResizePolicy>
+                                                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                               </columnResizePolicy>
+                                           </TableView>
+                                      </children>
+                                   </VBox>
+                               </children>
+                            </AnchorPane>
+                            <AnchorPane fx:id="ancpDebtAct">
+                               <children>
+                                   <VBox prefHeight="422.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <children>
+                                          <HBox>
+                                             <children>
+                                                 <Label text="Долговые акты">
+                                                     <font>
+                                                         <Font size="20.0" />
+                                                     </font>
+                                                 </Label>
+                                             </children>
+                                              <VBox.margin>
+                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                              </VBox.margin>
+                                          </HBox>
+                                          <TextField fx:id="txtDebtActSearch" promptText="Введите номер протокола или регистрационный знак и нажмите &quot;Ввод&quot;" />
+                                           <TableView fx:id="tblDebtActCars" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2000.0">
+                                               <columns>
+                                                   <TableColumn fx:id="tbcProtocolNumberDebtAct" prefWidth="90" text="№ протокола" />
+                                                   <TableColumn fx:id="tbcManufactureDebtAct" prefWidth="150.0" text="Марка" />
+                                                   <TableColumn fx:id="tbcCarIdDebtAct" prefWidth="150.0" text="Рег знак" />
+                                                   <TableColumn fx:id="tbcDebtActNumber" prefWidth="150.0" text="Номер долгового акта" />
+                                                   <TableColumn fx:id="tbcReleaseDateDebtAct" prefWidth="150.0" text="Дата выдачи" />
+                                               </columns>
+                                               <columnResizePolicy>
+                                                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                               </columnResizePolicy>
+                                           </TableView>
+                                      </children>
+                                   </VBox>
+                               </children>
+                            </AnchorPane>
+                            <AnchorPane fx:id="ancpOnPaying">
+                               <children>
+                                   <VBox prefHeight="421.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <children>
+                                          <HBox>
+                                             <children>
+                                                 <Label text="На оплате">
+                                                     <font>
+                                                         <Font size="20.0" />
+                                                     </font>
+                                                 </Label>
+                                             </children>
+                                              <VBox.margin>
+                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                              </VBox.margin>
+                                          </HBox>
+                                          <TextField fx:id="txtOnPayingSearch" promptText="Введите номер протокола или регистрационный знак и нажмите &quot;Ввод&quot;" />
+                                           <TableView fx:id="tblCarsOnPaying" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2000.0">
+                                               <columns>
+                                                   <TableColumn fx:id="tbcProtocolNumberOnPaying" prefWidth="150.0" text="№ протокола" />
+                                                   <TableColumn fx:id="tbcManufactureOnPaying" prefWidth="150.0" text="Марка" />
+                                                   <TableColumn fx:id="tbcCarIdOnPaying" prefWidth="150.0" text="Рег знак" />
+                                                   <TableColumn fx:id="tbcClauseOnPaying" prefWidth="150.0" text="Статья" />
+                                                   <TableColumn fx:id="tbcReleaseDateOnPaying" prefWidth="150.0" text="Дата выставления счета" />
+                                               </columns>
+                                               <columnResizePolicy>
+                                                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                               </columnResizePolicy>
+                                           </TableView>
+                                      </children>
+                                   </VBox>
+                               </children>
+                            </AnchorPane>
+                            <AnchorPane>
+                               <children>
+                                   <VBox prefHeight="424.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <children>
+                                          <HBox>
+                                             <children>
+                                                 <Label text="Поиск во всей базе данных">
+                                                     <font>
+                                                         <Font size="20.0" />
+                                                     </font>
+                                                 </Label>
+                                             </children>
+                                              <VBox.margin>
+                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                              </VBox.margin>
+                                    </HBox>
+                                           <TextField fx:id="txtSearchInBase" prefWidth="800.0" promptText="Введите регистрационный знак или номер протокола и нажмите &quot;Ввод&quot;">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                           </TextField>
+                                      </children>
+                                   </VBox>
+                               </children>
+                            </AnchorPane>
+                        </items>
+                     </SplitPane>
+                 </children>
+              </AnchorPane>
+          </items>
+       </SplitPane>
+   </children>
+</AnchorPane>

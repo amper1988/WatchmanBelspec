@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControllerFormGetToParking">
+   <children>
+      <ScrollPane opacity="0.75" prefHeight="619.0" prefWidth="851.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <BorderPane fx:id="brdpFull" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+               <top>
+                  <VBox>
+                     <BorderPane.margin>
+                        <Insets left="5.0" />
+                     </BorderPane.margin>
+                     <children>
+                           <Label text="Принятие на стоянку транспортного средства">
+                              <font>
+                                 <Font name="System Bold" size="20.0" />
+                              </font>
+                              <padding>
+                                 <Insets left="5.0" />
+                              </padding>
+                           </Label>
+                     </children>
+                  </VBox>
+               </top>
+               <left>
+                  <VBox maxHeight="500.0" BorderPane.alignment="TOP_LEFT">
+                     <children>
+                        <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label text="Фотографии" underline="true">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                                 <FlowPane prefWrapLength="385.0">
+                                    <children>
+                                          <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                             <children>
+                                                    <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                                       <children>
+                                                            <ImageView fx:id="imvImage1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </VBox.margin>
+                                                            </ImageView>
+                                                       </children>
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </VBox>
+                                                   <Button fx:id="btnInsertImage1" mnemonicParsing="false" text="Вставить фотографию">
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </Button>
+                                             </children>
+                                             <FlowPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </FlowPane.margin>
+                                          </VBox>
+                                          <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                             <children>
+                                                   <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                                      <children>
+                                                            <ImageView fx:id="imvImage2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </VBox.margin>
+                                                            </ImageView>
+                                                      </children>
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </VBox>
+                                                   <Button fx:id="btnInsertImage2" mnemonicParsing="false" text="Вставить фотографию">
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </Button>
+                                             </children>
+                                             <FlowPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </FlowPane.margin>
+                                          </VBox>
+                                          <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                             <children>
+                                                   <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                                      <children>
+                                                            <ImageView fx:id="imvImage3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </VBox.margin>
+                                                            </ImageView>
+                                                      </children>
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </VBox>
+                                                   <Button fx:id="btnInsertImage3" mnemonicParsing="false" text="Вставить фотографию">
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </Button>
+                                             </children>
+                                             <FlowPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </FlowPane.margin>
+                                          </VBox>
+                                          <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                             <children>
+                                                   <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                                                      <children>
+                                                            <ImageView fx:id="imvImage4" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true">
+                                                               <VBox.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </VBox.margin>
+                                                            </ImageView>
+                                                      </children>
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </VBox>
+                                                   <Button fx:id="btnInsertImage4" mnemonicParsing="false" text="Вставить фотографию">
+                                                      <VBox.margin>
+                                                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                      </VBox.margin>
+                                                   </Button>
+                                             </children>
+                                             <FlowPane.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </FlowPane.margin>
+                                          </VBox>
+                                    </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="20.0" />
+                                 </VBox.margin>
+                                 </FlowPane>
+                           </children>
+                        </VBox>
+                        <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                           <children>
+                              <Label text="Панель действий" underline="true">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                                 <Button fx:id="btnGetToParking" mnemonicParsing="false" text="Принять на стоянку">
+                                    <VBox.margin>
+                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </VBox.margin>
+                                 </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </VBox>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </VBox>
+               </left>
+               <center>
+                  <VBox maxHeight="500.0" maxWidth="500.0" BorderPane.alignment="TOP_LEFT">
+                     <children>
+                           <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                              <children>
+                                    <Label text="Данные транпортного средства" underline="true">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <HBox>
+                                       <children>
+                                             <Label text="Марка">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbManufacture" editable="true" promptText="Выберите марку из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" />
+                                                </HBox.margin>
+                                                <padding>
+                                                   <Insets left="5.0" />
+                                                </padding>
+                                             </ComboBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox fx:id="hbModel">
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                       <children>
+                                             <Label text="Модель">
+                                                <HBox.margin>
+                                                   <Insets top="5.0" />
+                                                </HBox.margin>
+                                    </Label>
+                                             <ComboBox fx:id="cmbModel" promptText="Выберите модель из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                             <Label text="Цвет ТС">
+                                                <HBox.margin>
+                                                   <Insets top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbColor" editable="true" promptText="Выберите цвет из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <HBox>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                       <children>
+                                             <Label text="Рег. знак">
+                                                <HBox.margin>
+                                                   <Insets top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <TextField fx:id="txtCarId" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="355.0" promptText="Введите регистрационный знак транспортного средтсва">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" />
+                                                </HBox.margin>
+                                             </TextField>
+                                       </children>
+                                    </HBox>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              </VBox.margin>
+                           </VBox>
+                           <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                              <children>
+                                    <Label text="Данные ГАИ" underline="true">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox>
+                                       <children>
+                                             <Label text="Район ГАИ">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbPoliceDepartment" editable="true" minWidth="300.0" promptText="Выберите район ГАИ из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" right="10.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox fx:id="hbPoliceman">
+                                       <children>
+                                             <Label text="Сотрудник ГАИ">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbPoliceman" maxWidth="200.0" promptText="Выбирете сотрудника ГАИ из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" right="10.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                             <Button fx:id="btnAddPoliceman" mnemonicParsing="false" text="Добавить">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" />
+                                                </HBox.margin>
+                                             </Button>
+                                       </children>
+                                    </HBox>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              </VBox.margin>
+                           </VBox>
+                           <VBox style="-fx-border-style: solid; -fx-border-radius: 8px;">
+                              <children>
+                                    <Label text="Данные об эвакуации" underline="true">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox>
+                                       <children>
+                                             <Label text="Статья КоАП">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbClause" promptText="Выберите статью">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" right="10.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox>
+                                       <children>
+                                             <CheckBox fx:id="cbEvacuatedBool" mnemonicParsing="false" text="Эвакуирован">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" />
+                                                </HBox.margin>
+                                             </CheckBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox fx:id="hbEvacuationOrganization">
+                                       <children>
+                                             <Label text="Эвакуирующая организация">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbEvacuationOrganization" promptText="Выберите из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" right="10.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox fx:id="hbWrecker">
+                                       <children>
+                                             <Label text="Водитель эвакуатора">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <ComboBox fx:id="cmbWrecker" promptText="Выберите из предложенного списка">
+                                                <HBox.margin>
+                                                   <Insets bottom="5.0" left="5.0" right="10.0" />
+                                                </HBox.margin>
+                                             </ComboBox>
+                                       </children>
+                                    </HBox>
+                                    <HBox fx:id="hbEvacuationAddress">
+                                       <children>
+                                             <Label text="Адрес откуда эвакуировали">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" top="5.0" />
+                                                </HBox.margin>
+                                             </Label>
+                                             <TextField fx:id="txtEvacuationAddress" minWidth="250.0" promptText="Введите адрес эвакуации">
+                                                <HBox.margin>
+                                                   <Insets left="5.0" />
+                                                </HBox.margin>
+                                    </TextField>
+                                       </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                                    </HBox>
+                              </children>
+                              <VBox.margin>
+                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              </VBox.margin>
+                           </VBox>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </VBox>
+               </center>
+            </BorderPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
