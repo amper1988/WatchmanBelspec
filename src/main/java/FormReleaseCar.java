@@ -18,18 +18,18 @@ public class FormReleaseCar {
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_release_car.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormReleaseCar controllerFormReleaseCar = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
 
-            }else {
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Выдача транспортного средства. Ввод данных квитанций.");
             stage.setScene(new Scene(root));
-            if(this.identifier != -1){
+            if (this.identifier != -1) {
                 controllerFormReleaseCar.setIdentifier(identifier, controllerFormCarDetails);
             }
             stage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
@@ -42,7 +42,7 @@ public class FormReleaseCar {
 
     }
 
-    public FormReleaseCar(int identifier, ControllerFormCarDetails controllerFormCarDetails){
+    public FormReleaseCar(int identifier, ControllerFormCarDetails controllerFormCarDetails) {
         super();
         this.identifier = identifier;
         this.controllerFormCarDetails = controllerFormCarDetails;

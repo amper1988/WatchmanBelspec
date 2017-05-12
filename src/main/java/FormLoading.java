@@ -1,12 +1,9 @@
-import com.sun.deploy.util.FXLoader;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import utils.ScreenSize;
 
 import java.io.IOException;
 
@@ -17,19 +14,18 @@ public class FormLoading {
     private boolean started = false;
     ControllerFormLoading controllerFormLoading;
 
-    public void start(Stage primaryStage, String info) throws IOException{
-        if(!started){
+    public void start(Stage primaryStage, String info) throws IOException {
+        if (!started) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("form_loading.fxml"));
             AnchorPane root = loader.load();
             controllerFormLoading = loader.getController();
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage(StageStyle.UNDECORATED);
                 parentWindow = false;
-            }
-            else{
+            } else {
                 stage = primaryStage;
                 parentWindow = true;
-                if(!started){
+                if (!started) {
                     oldScene = primaryStage.getScene();
                 }
             }
@@ -49,9 +45,9 @@ public class FormLoading {
     public void stop(String info) throws Exception {
         started = false;
         controllerFormLoading.setInfo(info);
-        if(parentWindow){
+        if (parentWindow) {
             stage.setScene(oldScene);
-        }else{
+        } else {
             stage.close();
         }
 

@@ -21,12 +21,12 @@ public class FormChooseOrganizationForArrest implements ChangerListener {
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_choose_organization_for_arrest.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormChooseOrganizationForArrest controllerFormChooseOrganizationForArrest = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
-            }else{
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Арест автомобиля. Выбор огранизации хранения после ареста.");
@@ -41,7 +41,7 @@ public class FormChooseOrganizationForArrest implements ChangerListener {
 
     }
 
-    public FormChooseOrganizationForArrest(int identifier, String whoArrested, String arrestReason, ControllerFormCarDetails controllerFormCarDetails, ChangerListener listener){
+    public FormChooseOrganizationForArrest(int identifier, String whoArrested, String arrestReason, ControllerFormCarDetails controllerFormCarDetails, ChangerListener listener) {
         this.identifier = identifier;
         this.whoArrested = whoArrested;
         this.arrestReason = arrestReason;
@@ -51,7 +51,7 @@ public class FormChooseOrganizationForArrest implements ChangerListener {
 
     @Override
     public void onChangeData() {
-        if(listener!=null){
+        if (listener != null) {
             listener.onChangeData();
         }
     }

@@ -1,24 +1,24 @@
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import utils.*;
+import utils.ScreenSize;
 
 import java.io.IOException;
 
 public class FormGetToParking {
     private int identifier = -1;
 
-    public  void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_get_to_parking.fxml"));
         AnchorPane root = loader.load();
         root.setId("with_background");
         ControllerFormGetToParking controllerFormGetToParking = loader.getController();
         Stage stage;
-        if(primaryStage!=null){
+        if (primaryStage != null) {
             stage = primaryStage;
-        }else{
+        } else {
             stage = new Stage();
         }
         stage.setTitle("Электронный учет. Принятие на стоянку.");
@@ -33,7 +33,7 @@ public class FormGetToParking {
         controllerFormGetToParking.setIdentifier(identifier, stage);
     }
 
-    public void setIdentifier(int identifier){
+    public void setIdentifier(int identifier) {
         this.identifier = identifier;
     }
 

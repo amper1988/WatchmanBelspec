@@ -11,19 +11,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class FormReleaseToAnotherParking{
+public class FormReleaseToAnotherParking {
     private int identifier;
     private ChangerListener listener;
 
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_release_to_another_parking.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormReleaseToAnotherParking controllerFormReleaseToAnotherParking = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
-            }else{
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Отправление внутреннего перемещения.");
@@ -37,7 +37,7 @@ public class FormReleaseToAnotherParking{
 
     }
 
-    public FormReleaseToAnotherParking(int identifier, ChangerListener listener){
+    public FormReleaseToAnotherParking(int identifier, ChangerListener listener) {
         this.identifier = identifier;
         this.listener = listener;
 

@@ -7,7 +7,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import model.CarDataForLists;
 import model.DataChangeObserver;
@@ -41,7 +44,7 @@ import java.util.ResourceBundle;
 import static java.lang.Thread.sleep;
 
 
-public class ControllerFormWatchman implements Initializable, ChangerListener{
+public class ControllerFormWatchman implements Initializable, ChangerListener {
     @FXML
     TableView<CarDataForLists> tblCarOnParking;
     @FXML
@@ -191,14 +194,14 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
 
         btnReleaseFromParking.setOnMousePressed(mouseEvent -> {
             {
-                if(tblCarOnParking.getSelectionModel().getSelectedItem() != null){
+                if (tblCarOnParking.getSelectionModel().getSelectedItem() != null) {
                     int identifier = tblCarOnParking.getSelectionModel().getSelectedItem().getIdentifier();
                     FormTakeReceipt frm = new FormTakeReceipt(identifier, null, tblCarOnParking.getSelectionModel().getSelectedItem().getCarId());
 
                     boolean block = tblCarOnParking.getSelectionModel().getSelectedItem().isBlock();
-                    if(block){
+                    if (block) {
                         Platform.runLater(() -> Utils.showAlertMessage("Автомобиль находится под арестом.", "Автомобиль находится под арестом. Снимите арест перед выставлением счета."));
-                    }else{
+                    } else {
                         try {
                             frm.start(null);
                         } catch (IOException e) {
@@ -206,7 +209,7 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                         }
                     }
 
-                }else
+                } else
                     Utils.showAlertMessage("Не выбрано значение", "Выберите необходимое для выдачи транспортное средство, выделив его в списке.");
 
             }
@@ -216,7 +219,7 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
     /**
      * Go to server and get information about all needed lists;
      */
-    private void refreshLists(){
+    private void refreshLists() {
         loadMoreOnParkingFromServer("");
         loadMoreReleasedCarsFromServer("");
         loadMoreOnEvacuationFromServer("");
@@ -224,10 +227,10 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         loadMoreOnPayingFromServer("");
     }
 
-    private void initializeTableParkingEvent(){
+    private void initializeTableParkingEvent() {
         //Set search on server procedure when typing in text field;
         txtOnParkingSearch.addEventHandler(KeyEvent.KEY_TYPED, keyEvent -> {
-            if(keyEvent.getCharacter().hashCode() == 13) {
+            if (keyEvent.getCharacter().hashCode() == 13) {
                 String searchString = txtOnParkingSearch.getText() + Utils.returnSymbol(keyEvent.getCharacter());
                 pageOnParking = -1; //load from server from start;
                 loadMoreOnParkingFromServer(searchString);
@@ -235,7 +238,7 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         });
 
         txtSearchInBase.addEventHandler(KeyEvent.KEY_TYPED, keyEvent -> {
-            if(keyEvent.getCharacter().hashCode() == 13){
+            if (keyEvent.getCharacter().hashCode() == 13) {
                 FormCarListFromBase frm = new FormCarListFromBase(txtSearchInBase.getText());
                 try {
                     frm.start(null);
@@ -254,23 +257,23 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         tblCarOnParking.addEventFilter(ScrollEvent.ANY, scrollEvent -> loadMoreOnParkingFromServer(txtOnParkingSearch.getText()));
         //Set handler for key pressed event
         tblCarOnParking.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER){
+            if (keyEvent.getCode() == KeyCode.ENTER) {
                 showCarDetails(tblCarOnParking.getSelectionModel().getSelectedItem().getIdentifier());
             }
-            if (keyEvent.getCode() == KeyCode.DOWN){
+            if (keyEvent.getCode() == KeyCode.DOWN) {
                 //load more data when list scrolled to end;
                 loadMoreOnParkingFromServer(txtOnParkingSearch.getText());
             }
-            if(keyEvent.getCode() == KeyCode.END){
+            if (keyEvent.getCode() == KeyCode.END) {
                 //load more data from server ;
                 loadMoreOnParkingFromServer(txtOnParkingSearch.getText());
             }
         });
     }
 
-    private void startUpdater(){
+    private void startUpdater() {
         Thread thread = new Thread(() -> {
-            while (! windowClosed){
+            while (!windowClosed) {
                 try {
                     sleep(100000);
                 } catch (InterruptedException e) {
@@ -312,11 +315,11 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         DataChangeObserver.getInstance().deleteListener(this);
     }
 
-    private void initializeTableReleasedEvent(){
+    private void initializeTableReleasedEvent() {
         //Set search on server procedure when typing in text field;
         txtReleasedSearch.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER){
-                String searchString = txtReleasedSearch.getText()+Utils.returnSymbol(keyEvent.getCharacter());
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                String searchString = txtReleasedSearch.getText() + Utils.returnSymbol(keyEvent.getCharacter());
                 pageReleased = -1; //load from server from start;
                 loadMoreReleasedCarsFromServer(searchString);
             }
@@ -331,52 +334,52 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         tblReleasedCars.addEventFilter(ScrollEvent.ANY, scrollEvent -> loadMoreReleasedCarsFromServer(txtReleasedSearch.getText()));
         //Set handler for key pressed event
         tblReleasedCars.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 showCarDetails(tblReleasedCars.getSelectionModel().getSelectedItem().getIdentifier());
             }
-            if (event.getCode() == KeyCode.DOWN){
+            if (event.getCode() == KeyCode.DOWN) {
                 //load more data when list scrolled to end;
                 loadMoreReleasedCarsFromServer(txtReleasedSearch.getText());
             }
-            if(event.getCode() == KeyCode.END){
+            if (event.getCode() == KeyCode.END) {
                 //load more data from server ;
                 loadMoreReleasedCarsFromServer(txtReleasedSearch.getText());
             }
         });
     }
 
-    private void initializeTableEvacuationEvent(){
+    private void initializeTableEvacuationEvent() {
         txtOnEvacuationSearch.addEventHandler(KeyEvent.KEY_TYPED, event -> {
-            if(event.getCharacter().hashCode() == 13){
-                String searchString = txtOnEvacuationSearch.getText()+Utils.returnSymbol(event.getCharacter());
+            if (event.getCharacter().hashCode() == 13) {
+                String searchString = txtOnEvacuationSearch.getText() + Utils.returnSymbol(event.getCharacter());
                 pageOnEvacuation = -1; //load from server from start;
                 loadMoreOnEvacuationFromServer(searchString);
             }
         });
         tblCarsOnEvacuation.setOnMousePressed(event -> {
-            if(event.isPrimaryButtonDown() && event.getClickCount() == 2){
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 showDetailsOnEvacuation();
             }
         });
         tblCarsOnEvacuation.addEventFilter(ScrollEvent.ANY, scrollEvent -> loadMoreOnEvacuationFromServer(txtOnEvacuationSearch.getText()));
         tblCarsOnEvacuation.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if(event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 showDetailsOnEvacuation();
             }
-            if(event.getCode() == KeyCode.DOWN){
+            if (event.getCode() == KeyCode.DOWN) {
                 loadMoreOnEvacuationFromServer(txtOnEvacuationSearch.getText());
             }
-            if(event.getCode() == KeyCode.END){
+            if (event.getCode() == KeyCode.END) {
                 loadMoreOnEvacuationFromServer(txtOnEvacuationSearch.getText());
             }
         });
 
     }
 
-    private void initializeTableDebtActEvent(){
+    private void initializeTableDebtActEvent() {
         txtDebtActSearch.addEventHandler(KeyEvent.KEY_TYPED, event -> {
-            if(event.getCharacter().hashCode() == 13){
-                String searchString = txtDebtActSearch.getText()+Utils.returnSymbol(event.getCharacter());
+            if (event.getCharacter().hashCode() == 13) {
+                String searchString = txtDebtActSearch.getText() + Utils.returnSymbol(event.getCharacter());
                 pageDebtAct = -1; //load from server from start;
                 loadMoreDebtActCarsFromServer(searchString);
             }
@@ -386,55 +389,55 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                     showCarDetails(tblDebtActCars.getSelectionModel().getSelectedItem().getIdentifier());
                 }
-            }catch(Throwable t){
+            } catch (Throwable t) {
                 t.printStackTrace();
             }
         });
         tblDebtActCars.addEventFilter(ScrollEvent.ANY, scrollEvent -> loadMoreDebtActCarsFromServer(txtDebtActSearch.getText()));
         tblDebtActCars.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if(event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 showCarDetails(tblDebtActCars.getSelectionModel().getSelectedItem().getIdentifier());
             }
-            if(event.getCode() == KeyCode.DOWN){
+            if (event.getCode() == KeyCode.DOWN) {
                 loadMoreDebtActCarsFromServer(txtDebtActSearch.getText());
             }
-            if(event.getCode() == KeyCode.END){
+            if (event.getCode() == KeyCode.END) {
                 loadMoreDebtActCarsFromServer(txtDebtActSearch.getText());
             }
         });
     }
 
-    private void initializeTablePayingEvent(){
+    private void initializeTablePayingEvent() {
         txtOnPayingSearch.addEventHandler(KeyEvent.KEY_TYPED, event -> {
-            if(event.getCharacter().hashCode() == 13){
-                String searchString = txtOnPayingSearch.getText()+Utils.returnSymbol(event.getCharacter());
+            if (event.getCharacter().hashCode() == 13) {
+                String searchString = txtOnPayingSearch.getText() + Utils.returnSymbol(event.getCharacter());
                 pageOnPaying = -1; //load from server from start;
                 loadMoreOnPayingFromServer(searchString);
             }
         });
         tblCarsOnPaying.setOnMousePressed(event -> {
-            if(event.isPrimaryButtonDown() && event.getClickCount() == 2){
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 showCarDetails(tblCarsOnPaying.getSelectionModel().getSelectedItem().getIdentifier());
             }
         });
         tblCarsOnPaying.addEventFilter(ScrollEvent.ANY, scrollEvent -> loadMoreDebtActCarsFromServer(txtOnPayingSearch.getText()));
         tblCarsOnPaying.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             {
-                if(event.getCode() == KeyCode.ENTER){
+                if (event.getCode() == KeyCode.ENTER) {
                     showCarDetails(tblCarsOnPaying.getSelectionModel().getSelectedItem().getIdentifier());
                 }
-                if(event.getCode() == KeyCode.DOWN){
+                if (event.getCode() == KeyCode.DOWN) {
                     loadMoreOnPayingFromServer(txtOnPayingSearch.getText());
                 }
-                if(event.getCode() == KeyCode.END){
+                if (event.getCode() == KeyCode.END) {
                     loadMoreOnPayingFromServer(txtOnPayingSearch.getText());
                 }
             }
         });
     }
 
-    private void showTableOnParking(ObservableList<CarDataForLists> observableList){
-        Platform.runLater(()->{
+    private void showTableOnParking(ObservableList<CarDataForLists> observableList) {
+        Platform.runLater(() -> {
             tblCarOnParking.setItems(observableList);
             tbcProtocolNumber.setCellValueFactory(cellData -> cellData.getValue().protocolNumberProperty());
             tbcManufacture.setCellValueFactory(cellData -> cellData.getValue().manufactureProperty());
@@ -445,13 +448,13 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
             tblCarOnParking.setRowFactory(new javafx.util.Callback<TableView<CarDataForLists>, TableRow<CarDataForLists>>() {
                 @Override
                 public TableRow<CarDataForLists> call(TableView<CarDataForLists> carDataForListsTableView) {
-                    return new TableRow<CarDataForLists>(){
+                    return new TableRow<CarDataForLists>() {
                         @Override
                         protected void updateItem(CarDataForLists item, boolean empty) {
                             super.updateItem(item, empty);
-                            if(item!=null && item.isBlock()){
+                            if (item != null && item.isBlock()) {
                                 setStyle("-fx-background-color: orange");
-                            }else{
+                            } else {
                                 setTextFill(Color.BLACK);
                                 setStyle("");
                             }
@@ -460,48 +463,48 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                     };
                 }
             });
-            if(lastSelectedOnParking != null)
+            if (lastSelectedOnParking != null)
                 tblCarOnParking.getSelectionModel().select(lastSelectedOnParking.getIndexInTable());
         });
 
     }
 
-    private void showTableReleased(ObservableList<CarDataForLists> observableList){
-        Platform.runLater(()->{
+    private void showTableReleased(ObservableList<CarDataForLists> observableList) {
+        Platform.runLater(() -> {
             tblReleasedCars.setItems(observableList);
             tbcProtocolNumberReleased.setCellValueFactory(cellData -> {
-                if(cellData != null && cellData.getValue() != null)
+                if (cellData != null && cellData.getValue() != null)
                     return cellData.getValue().protocolNumberProperty();
                 return null;
             });
             tbcManufactureReleased.setCellValueFactory(cellData -> {
-                if(cellData != null && cellData.getValue() != null)
+                if (cellData != null && cellData.getValue() != null)
                     return cellData.getValue().manufactureProperty();
                 return null;
             });
             tbcCarIdReleased.setCellValueFactory(cellData -> {
-                if(cellData != null && cellData.getValue() != null)
+                if (cellData != null && cellData.getValue() != null)
                     return cellData.getValue().carIdProperty();
                 return null;
             });
             tbcParkingDateReleased.setCellValueFactory(cellData -> {
-                if(cellData != null && cellData.getValue() != null)
+                if (cellData != null && cellData.getValue() != null)
                     return cellData.getValue().parkingDateProperty();
                 return null;
             });
             tbcReleaseDateReleased.setCellValueFactory(cellData -> {
-                if(cellData != null && cellData.getValue() != null)
+                if (cellData != null && cellData.getValue() != null)
                     return cellData.getValue().releaseDateProperty();
                 return null;
             });
-            if(lastSelectedReleased != null)
+            if (lastSelectedReleased != null)
                 tblReleasedCars.getSelectionModel().select(lastSelectedReleased.getIndexInTable());
         });
 
     }
 
-    private void showTableOnEvacuation(ObservableList<CarDataForLists> observableList){
-        Platform.runLater(()->{
+    private void showTableOnEvacuation(ObservableList<CarDataForLists> observableList) {
+        Platform.runLater(() -> {
             tblCarsOnEvacuation.setItems(observableList);
             tbcProtocolNumberEvacuation.setCellValueFactory(cellData -> cellData.getValue().protocolNumberProperty());
             tbcManufactureEvacuation.setCellValueFactory(cellData -> cellData.getValue().manufactureProperty());
@@ -510,14 +513,14 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
             tbcClauseEvacuation.setCellValueFactory(cellData -> cellData.getValue().clauseProperty());
             tbcPoliceDepartmentEvacuation.setCellValueFactory(cellData -> cellData.getValue().policeDepartmentProperty());
             tblCarsOnEvacuation.getSelectionModel().select(lastSelectedOnEvacuation);
-            if(lastSelectedOnEvacuation != null)
+            if (lastSelectedOnEvacuation != null)
                 tblCarsOnEvacuation.getSelectionModel().select(lastSelectedOnEvacuation.getIndexInTable());
         });
 
     }
 
-    private void showTableOnPaying(ObservableList<CarDataForLists> observableList){
-        Platform.runLater(()->{
+    private void showTableOnPaying(ObservableList<CarDataForLists> observableList) {
+        Platform.runLater(() -> {
             tblCarsOnPaying.setItems(observableList);
             tbcProtocolNumberOnPaying.setCellValueFactory(cellData -> cellData.getValue().protocolNumberProperty());
             tbcManufactureOnPaying.setCellValueFactory(cellData -> cellData.getValue().manufactureProperty());
@@ -525,14 +528,14 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
             tbcClauseOnPaying.setCellValueFactory(cellData -> cellData.getValue().clauseProperty());
             tbcReleaseDateOnPaying.setCellValueFactory(cellData -> cellData.getValue().releaseDateProperty());
             tblCarsOnPaying.getSelectionModel().select(lastSelectedOnPaying);
-            if(lastSelectedOnPaying != null)
+            if (lastSelectedOnPaying != null)
                 tblCarsOnPaying.getSelectionModel().select(lastSelectedOnPaying.getIndexInTable());
         });
 
     }
 
-    private void showTableDebtAct(ObservableList<CarDataForLists> observableList){
-        Platform.runLater(()->{
+    private void showTableDebtAct(ObservableList<CarDataForLists> observableList) {
+        Platform.runLater(() -> {
             tblDebtActCars.setItems(observableList);
             tbcProtocolNumberDebtAct.setCellValueFactory(cellData -> cellData.getValue().protocolNumberProperty());
             tbcManufactureDebtAct.setCellValueFactory(cellData -> cellData.getValue().manufactureProperty());
@@ -540,7 +543,7 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
             tbcDebtActNumber.setCellValueFactory(cellData -> cellData.getValue().debtActNumberProperty());
             tbcReleaseDateDebtAct.setCellValueFactory(cellData -> cellData.getValue().releaseDateProperty());
             tblDebtActCars.getSelectionModel().select(lastSelectedOnDebtAct);
-            if(lastSelectedOnDebtAct != null)
+            if (lastSelectedOnDebtAct != null)
                 tblDebtActCars.getSelectionModel().select(lastSelectedOnDebtAct.getIndexInTable());
         });
 
@@ -548,13 +551,14 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
 
     /**
      * Get last visible item on UI in table.
+     *
      * @param table TableView
      * @return lat visible item from table or 0 if table is null;
      */
-    private int getLastVisibleItem(TableView<?> table){
-        try{
-            return ((VirtualFlow)((TableViewSkin<?>) table.getSkin()).getChildren().get(1)).getLastVisibleCell().getIndex();
-        }catch (NullPointerException e){
+    private int getLastVisibleItem(TableView<?> table) {
+        try {
+            return ((VirtualFlow) ((TableViewSkin<?>) table.getSkin()).getChildren().get(1)).getLastVisibleCell().getIndex();
+        } catch (NullPointerException e) {
             return 0;
         }
 
@@ -565,8 +569,8 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
      * Depends on private field 'pageOnParking'
      * 'pageOnParking' contains information about loaded pages from server
      */
-    private void loadMoreOnParkingFromServer( String param){
-        if(((getLastVisibleItem(tblCarOnParking)+100 > pageOnParking*200) && !parkingLoading)){
+    private void loadMoreOnParkingFromServer(String param) {
+        if (((getLastVisibleItem(tblCarOnParking) + 100 > pageOnParking * 200) && !parkingLoading)) {
             //list ends soon;
             //Go to server and get more information;
             parkingLoading = true; //set flags that data is loading;
@@ -574,23 +578,23 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                     new GetCarsOnParkingRequestEnvelope(++pageOnParking, param)).enqueue(new Callback<GetCarsOnParkingResponseEnvelope>() {
                 @Override
                 public void onResponse(Call<GetCarsOnParkingResponseEnvelope> call, final Response<GetCarsOnParkingResponseEnvelope> response) {
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         //response is good;
                         ObservableList<CarDataForLists> observableList = FXCollections.observableArrayList();
                         List<CarDataShort> carDataShortList = response.body().getData().getCarDataShortList();
-                        if (carDataShortList != null){
+                        if (carDataShortList != null) {
                             int index = 0;
-                            for(CarDataShort carDataShort: carDataShortList){
+                            for (CarDataShort carDataShort : carDataShortList) {
                                 try {
                                     observableList.add(Converter.convertCarDataShortToCarDataForLists(carDataShort, index++));
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            Platform.runLater(()->{
-                                    //add information to list;
-                                    if(pageOnParking == 0){
-                                        listOnParking.clear();
+                            Platform.runLater(() -> {
+                                //add information to list;
+                                if (pageOnParking == 0) {
+                                    listOnParking.clear();
                                     listOnParking.addAll(observableList);
                                     //show new information in UI;
                                     showTableOnParking(listOnParking);
@@ -598,15 +602,15 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
 
                             });
 
-                        }else if(!param.equals("") || pageOnParking == 0){
-                            Platform.runLater(()->{
-                                    listOnParking.clear();
-                                    showTableOnParking(listOnParking);
+                        } else if (!param.equals("") || pageOnParking == 0) {
+                            Platform.runLater(() -> {
+                                listOnParking.clear();
+                                showTableOnParking(listOnParking);
 
                             });
 
                         }
-                    }else{
+                    } else {
                         //response is bad;
                         pageOnParking--;// page isn't loaded.
                         Platform.runLater(() -> Utils.showAlertMessage("Response error.", Converter.convertResponseToSting(response.errorBody())));
@@ -620,10 +624,10 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                     //request if fail;
                     parkingLoading = false; //free flag that data is loading;
                     pageOnParking--; // page isn't loaded;
-                    if(loadOnParkingCount++ < Main.COUNT_RETRY){
-                       loadMoreOnParkingFromServer(param);
-                    }else{
-                        loadOnParkingCount=0;
+                    if (loadOnParkingCount++ < Main.COUNT_RETRY) {
+                        loadMoreOnParkingFromServer(param);
+                    } else {
+                        loadOnParkingCount = 0;
                         Platform.runLater(() -> Utils.showAlertMessage("Fail request.", t.getMessage()));
                     }
 
@@ -632,9 +636,9 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         }
     }
 
-//    private long lastTimeReleased;
-    private void loadMoreReleasedCarsFromServer( String param){
-        if((getLastVisibleItem(tblReleasedCars)+100 > pageReleased*200)&& !releasedLoading) {
+    //    private long lastTimeReleased;
+    private void loadMoreReleasedCarsFromServer(String param) {
+        if ((getLastVisibleItem(tblReleasedCars) + 100 > pageReleased * 200) && !releasedLoading) {
 //            long currentTime = System.currentTimeMillis();
 //            if(currentTime - lastTimeReleased < 1000 ){
 //                return;
@@ -661,18 +665,18 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                                     e.printStackTrace();
                                 }
                             }
-                            Platform.runLater(()->{
-                                if(pageReleased == 0){
-                                        listReleased.clear();
+                            Platform.runLater(() -> {
+                                if (pageReleased == 0) {
+                                    listReleased.clear();
                                 }
                                 listReleased.addAll(observableList);
                                 showTableReleased(listReleased);
                             });
-                        }else if(!param.equals("") || pageReleased == 0){
-                                Platform.runLater(()->{
-                                        listReleased.clear();
-                                        showTableReleased(listReleased);
-                                });
+                        } else if (!param.equals("") || pageReleased == 0) {
+                            Platform.runLater(() -> {
+                                listReleased.clear();
+                                showTableReleased(listReleased);
+                            });
 
                         }
 
@@ -690,9 +694,9 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                     //response fail.
                     releasedLoading = false; //free flags that data is loading;
                     pageReleased--; //page isn't loaded;
-                    if(loadReleasedCount++ < Main.COUNT_RETRY){
+                    if (loadReleasedCount++ < Main.COUNT_RETRY) {
                         loadMoreReleasedCarsFromServer(param);
-                    }else{
+                    } else {
                         loadReleasedCount = 0;
                         Platform.runLater(() -> Utils.showAlertMessage("Fail request.", t.getMessage()));
                     }
@@ -702,21 +706,21 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         }
     }
 
-//    private long lastTimeEvacuation;
-    private void loadMoreOnEvacuationFromServer( String param){
-        if((getLastVisibleItem(tblCarsOnEvacuation)+100 > pageOnEvacuation*200)&& !evacuationLoading){
+    //    private long lastTimeEvacuation;
+    private void loadMoreOnEvacuationFromServer(String param) {
+        if ((getLastVisibleItem(tblCarsOnEvacuation) + 100 > pageOnEvacuation * 200) && !evacuationLoading) {
             evacuationLoading = true;
             retrofitService.executeGetCarsOnEvacuation(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                     new GetCarsOnEvacuationRequestEnvelope(++pageOnEvacuation, param)).enqueue(new Callback<GetCarsOnEvacuationResponseEnvelope>() {
                 @Override
                 public void onResponse(Call<GetCarsOnEvacuationResponseEnvelope> call, final Response<GetCarsOnEvacuationResponseEnvelope> response) {
 
-                    if(response.code()==200){
+                    if (response.code() == 200) {
                         ObservableList<CarDataForLists> observableList = FXCollections.observableArrayList();
                         List<CarDataShort> carDataShortList = response.body().getData().getCarDataShortList();
-                        if(carDataShortList != null){
+                        if (carDataShortList != null) {
                             int index = 0;
-                            for(CarDataShort carDataShort: carDataShortList){
+                            for (CarDataShort carDataShort : carDataShortList) {
                                 try {
                                     observableList.add(Converter.convertCarDataShortToCarDataForLists(carDataShort, index++));
                                 } catch (ParseException e) {
@@ -724,23 +728,23 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                                 }
 
                             }
-                            Platform.runLater(()-> {
-                                if(pageOnEvacuation == 0){
+                            Platform.runLater(() -> {
+                                if (pageOnEvacuation == 0) {
                                     listOnEvacuation.clear();
                                 }
                                 listOnEvacuation.addAll(observableList);
                                 showTableOnEvacuation(listOnEvacuation);
                             });
 
-                        }else if(!param.equals("") || pageOnEvacuation == 0){
-                            Platform.runLater(()->{
+                        } else if (!param.equals("") || pageOnEvacuation == 0) {
+                            Platform.runLater(() -> {
                                 listOnEvacuation.clear();
                                 showTableOnEvacuation(listOnEvacuation);
                             });
 
                         }
 
-                    }else {
+                    } else {
                         pageOnEvacuation--;
                         Platform.runLater(() -> Utils.showAlertMessage("Response error code: " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
@@ -752,9 +756,9 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                 public void onFailure(Call<GetCarsOnEvacuationResponseEnvelope> call, final Throwable t) {
                     pageOnEvacuation--;
                     evacuationLoading = false;
-                    if(loadOnEvacuationCount++ < Main.COUNT_RETRY){
+                    if (loadOnEvacuationCount++ < Main.COUNT_RETRY) {
                         loadMoreOnEvacuationFromServer(param);
-                    }else{
+                    } else {
                         loadOnEvacuationCount = 0;
                         Platform.runLater(() -> Utils.showAlertMessage("Fail request", t.getMessage()));
                     }
@@ -763,28 +767,28 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         }
     }
 
-    private void loadMoreDebtActCarsFromServer( String param){
-        if((getLastVisibleItem(tblDebtActCars)+100 > pageDebtAct*200)&& !debtActLoading){
+    private void loadMoreDebtActCarsFromServer(String param) {
+        if ((getLastVisibleItem(tblDebtActCars) + 100 > pageDebtAct * 200) && !debtActLoading) {
             debtActLoading = true;
             retrofitService.executeGetDebtActCars(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                     new GetDebtActCarsRequestEnvelope(++pageDebtAct, param)).enqueue(new Callback<GetDebtActCarsResponseEnvelope>() {
                 @Override
                 public void onResponse(Call<GetDebtActCarsResponseEnvelope> call, final Response<GetDebtActCarsResponseEnvelope> response) {
 
-                    if(response.code()==200){
+                    if (response.code() == 200) {
                         ObservableList<CarDataForLists> observableList = FXCollections.observableArrayList();
                         List<CarDataShort> carDataShortList = response.body().getData().getCarDataShortList();
-                        if(carDataShortList != null){
+                        if (carDataShortList != null) {
                             int index = 0;
-                            for(CarDataShort carDataShort: carDataShortList){
+                            for (CarDataShort carDataShort : carDataShortList) {
                                 try {
                                     observableList.add(Converter.convertCarDataShortToCarDataForLists(carDataShort, index++));
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            Platform.runLater(()->{
-                                if(pageDebtAct == 0){
+                            Platform.runLater(() -> {
+                                if (pageDebtAct == 0) {
                                     listDebtAct.clear();
                                 }
                                 listDebtAct.addAll(observableList);
@@ -792,14 +796,14 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                             });
 
 
-                        }else if(!param.equals("") || pageDebtAct == 0){
-                            Platform.runLater(()->{
+                        } else if (!param.equals("") || pageDebtAct == 0) {
+                            Platform.runLater(() -> {
                                 listDebtAct.clear();
                                 showTableDebtAct(listDebtAct);
                             });
 
                         }
-                    }else {
+                    } else {
                         pageDebtAct--;
                         Platform.runLater(() -> Utils.showAlertMessage("Response error code: " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
@@ -811,9 +815,9 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                 public void onFailure(Call<GetDebtActCarsResponseEnvelope> call, final Throwable t) {
                     pageDebtAct--;
                     debtActLoading = false;
-                    if(loadDebtActCount++ < Main.COUNT_RETRY){
+                    if (loadDebtActCount++ < Main.COUNT_RETRY) {
                         loadMoreDebtActCarsFromServer(param);
-                    }else{
+                    } else {
                         loadDebtActCount = 0;
                         Platform.runLater(() -> Utils.showAlertMessage("Fail request ", t.getMessage()));
                     }
@@ -822,43 +826,42 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         }
     }
 
-    private void loadMoreOnPayingFromServer( String param){
-        if((getLastVisibleItem(tblCarsOnPaying)+100 > pageOnPaying*200)&& !payingLoading){
+    private void loadMoreOnPayingFromServer(String param) {
+        if ((getLastVisibleItem(tblCarsOnPaying) + 100 > pageOnPaying * 200) && !payingLoading) {
             payingLoading = true;
             retrofitService.executeGetCarsOnPaying(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                     new GetCarsOnPayingRequestEnvelope(++pageOnPaying, param)).enqueue(new Callback<GetCarsOnPayingResponseEnvelope>() {
                 @Override
                 public void onResponse(Call<GetCarsOnPayingResponseEnvelope> call, final Response<GetCarsOnPayingResponseEnvelope> response) {
 
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         ObservableList<CarDataForLists> observableList = FXCollections.observableArrayList();
                         List<CarDataShort> carDataShortList = response.body().getData().getCarDataShortList();
-                        if(carDataShortList != null){
+                        if (carDataShortList != null) {
                             int index = 0;
-                            for(CarDataShort carDataShort: carDataShortList){
+                            for (CarDataShort carDataShort : carDataShortList) {
                                 try {
                                     observableList.add(Converter.convertCarDataShortToCarDataForLists(carDataShort, index++));
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            Platform.runLater(()->{
-                                if(pageOnPaying == 0){
+                            Platform.runLater(() -> {
+                                if (pageOnPaying == 0) {
                                     listOnPaying.clear();
                                 }
                                 listOnPaying.addAll(observableList);
                                 showTableOnPaying(listOnPaying);
                             });
 
-                        }
-                        else if(!param.equals("") || pageOnPaying == 0){
-                            Platform.runLater(()-> {
+                        } else if (!param.equals("") || pageOnPaying == 0) {
+                            Platform.runLater(() -> {
                                 listOnPaying.clear();
                                 showTableOnPaying(listOnPaying);
                             });
 
                         }
-                    }else{
+                    } else {
                         pageOnPaying--;
                         Platform.runLater(() -> Utils.showAlertMessage("Response error code: " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
@@ -870,9 +873,9 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
                 public void onFailure(Call<GetCarsOnPayingResponseEnvelope> call, final Throwable t) {
                     payingLoading = false;
                     pageOnPaying--;
-                    if(loadOnPayingCount++ < Main.COUNT_RETRY){
+                    if (loadOnPayingCount++ < Main.COUNT_RETRY) {
                         loadMoreOnPayingFromServer(param);
-                    }else{
+                    } else {
                         loadOnPayingCount = 0;
                         Platform.runLater(() -> Utils.showAlertMessage("Fail request.", t.getMessage()));
                     }
@@ -881,25 +884,25 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
         }
     }
 
-    private void showCarDetails(int identifier){
-        try{
+    private void showCarDetails(int identifier) {
+        try {
             FormCarDetails frm = new FormCarDetails(identifier);
             frm.start(null);
-        }catch (Throwable t){
+        } catch (Throwable t) {
             t.printStackTrace();
         }
     }
 
-    private void showDetailsOnEvacuation(){
+    private void showDetailsOnEvacuation() {
 
         String status = tblCarsOnEvacuation.getSelectionModel().getSelectedItem().getStatus();
-        switch (status){
+        switch (status) {
             case "На перемещении":
                 showCarDetails(tblCarsOnEvacuation.getSelectionModel().getSelectedItem().getIdentifier());
                 break;
             case "На эвакуации":
-                    FormGetToParking frm = new FormGetToParking();
-                    frm.setIdentifier(tblCarsOnEvacuation.getSelectionModel().getSelectedItem().getIdentifier());
+                FormGetToParking frm = new FormGetToParking();
+                frm.setIdentifier(tblCarsOnEvacuation.getSelectionModel().getSelectedItem().getIdentifier());
                 try {
                     frm.start(null);
                 } catch (IOException e) {
@@ -914,7 +917,7 @@ public class ControllerFormWatchman implements Initializable, ChangerListener{
     public void onChangeData() {
         pageOnParking = -1;
         pageDebtAct = -1;
-        pageOnEvacuation = - 1;
+        pageOnEvacuation = -1;
         pageReleased = -1;
         pageOnPaying = -1;
         refreshLists();

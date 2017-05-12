@@ -48,9 +48,9 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
         getDataFromServer();
         initializeComboBoxsEvent();
         btnTakeToParking.setOnAction(actionEvent -> {
-            if(confirmData()){
+            if (confirmData()) {
                 createTakeFromAnotherParking();
-            }else{
+            } else {
                 Utils.showAlertMessage("Данные не заполнены", "Проверьте введенные данные.");
             }
 
@@ -63,28 +63,28 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
             @Override
             public void onResponse(Call<CreateTakeFromAnotherParkingResponseEnvelope> call, final Response<CreateTakeFromAnotherParkingResponseEnvelope> response) {
                 takeFromAnotherParkingCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 1){
+                    if (serverAnswer.getCode() == 1) {
                         Platform.runLater(() -> {
                             Utils.showAlertMessage("Запрос произведен успешно.", serverAnswer.getDescription());
                             listener.onChangeData();
                             DataChangeObserver.getInstance().dataChangeNotify();
-                            ((Stage)btnTakeToParking.getScene().getWindow()).close();
+                            ((Stage) btnTakeToParking.getScene().getWindow()).close();
                         });
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                     }
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<CreateTakeFromAnotherParkingResponseEnvelope> call, final Throwable t) {
-                if(takeFromAnotherParkingCount++ < Main.COUNT_RETRY){
+                if (takeFromAnotherParkingCount++ < Main.COUNT_RETRY) {
                     createTakeFromAnotherParking();
-                }else{
+                } else {
                     takeFromAnotherParkingCount = 0;
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса", t.getMessage()));
                 }
@@ -93,25 +93,25 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
         });
     }
 
-    private void getDataFromServer(){
+    private void getDataFromServer() {
         Api.createRetrofitService().executeGetOrganizationsWithEmployers(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                 new GetOrganizationsWithEmployersRequestEnvelope()).enqueue(new Callback<GetOrganizationsWithEmployersResponseEnvelope>() {
             @Override
             public void onResponse(Call<GetOrganizationsWithEmployersResponseEnvelope> call, final Response<GetOrganizationsWithEmployersResponseEnvelope> response) {
                 getDataFromServerCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     organizationResponse = response.body();
                     cmbEvacuationOrganization.setItems(FXCollections.observableArrayList(organizationResponse.getOrganizationListAsString()));
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<GetOrganizationsWithEmployersResponseEnvelope> call, final Throwable t) {
-                if(getDataFromServerCount++ < Main.COUNT_RETRY){
+                if (getDataFromServerCount++ < Main.COUNT_RETRY) {
                     getDataFromServer();
-                }else{
+                } else {
                     getDataFromServerCount = 0;
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса.", t.getMessage()));
                 }
@@ -120,18 +120,18 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
         });
     }
 
-    public void setData(int identifier, ChangerListener listener){
+    public void setData(int identifier, ChangerListener listener) {
         this.identifier = identifier;
         this.listener = listener;
     }
 
-    private void initializeComboBoxsEvent(){
+    private void initializeComboBoxsEvent() {
         cmbEvacuationOrganization.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             cmbWrecker.setVisible(true);
             List<OrganizationItem> organizationItems = organizationResponse.getOrganizationItemList();
-            if(organizationItems != null){
-                for(OrganizationItem item: organizationItems){
-                    if(item.getName().equals(newValue)){
+            if (organizationItems != null) {
+                for (OrganizationItem item : organizationItems) {
+                    if (item.getName().equals(newValue)) {
                         cmbWrecker.setItems(FXCollections.observableArrayList(item.getWreckerListAsString()));
                     }
                 }
@@ -139,17 +139,17 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
         });
 
         cmbEvacuationOrganization.getEditor().setOnKeyTyped(event -> {
-            String searchString  = (cmbEvacuationOrganization.getEditor().getText() + Utils.returnSymbol(event.getCharacter())).toLowerCase();
+            String searchString = (cmbEvacuationOrganization.getEditor().getText() + Utils.returnSymbol(event.getCharacter())).toLowerCase();
             final List<String> foundList = new ArrayList<>();
             List<OrganizationItem> organizationItems = organizationResponse.getOrganizationItemList();
-            if(organizationItems != null){
-                for(OrganizationItem item: organizationItems){
-                    if(item.getName().toLowerCase().contains(searchString)){
+            if (organizationItems != null) {
+                for (OrganizationItem item : organizationItems) {
+                    if (item.getName().toLowerCase().contains(searchString)) {
                         foundList.add(item.getName());
                     }
                 }
 
-            }else{
+            } else {
                 foundList.add("");
             }
             Platform.runLater(() -> {
@@ -157,8 +157,8 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
                 cmbEvacuationOrganization.setItems(FXCollections.observableArrayList(foundList));
                 cmbEvacuationOrganization.show();
             });
-            if(searchString.equals("") || searchString.equals(" ")){
-                if(cmbWrecker.getItems() != null){
+            if (searchString.equals("") || searchString.equals(" ")) {
+                if (cmbWrecker.getItems() != null) {
                     cmbWrecker.getItems().clear();
                 }
                 cmbWrecker.setVisible(false);
@@ -166,9 +166,9 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
         });
 
         cmbEvacuationOrganization.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue){
-                if(cmbEvacuationOrganization.getSelectionModel().getSelectedItem() == null && !cmbEvacuationOrganization.getEditor().getText().equals("")){
-                    if(cmbWrecker.getItems() != null){
+            if (!newValue) {
+                if (cmbEvacuationOrganization.getSelectionModel().getSelectedItem() == null && !cmbEvacuationOrganization.getEditor().getText().equals("")) {
+                    if (cmbWrecker.getItems() != null) {
                         cmbWrecker.getItems().clear();
                     }
                     cmbWrecker.setVisible(false);
@@ -181,10 +181,10 @@ public class ControllerFormTakeFromAnotherParking implements Initializable {
         });
     }
 
-    private boolean confirmData(){
-        if(cmbEvacuationOrganization.getSelectionModel().getSelectedItem().isEmpty())
+    private boolean confirmData() {
+        if (cmbEvacuationOrganization.getSelectionModel().getSelectedItem().isEmpty())
             return false;
-        if(cmbWrecker.getSelectionModel().getSelectedItem().isEmpty())
+        if (cmbWrecker.getSelectionModel().getSelectedItem().isEmpty())
             return false;
         return true;
     }

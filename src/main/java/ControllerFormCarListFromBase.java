@@ -1,20 +1,15 @@
 import com.sun.javafx.scene.control.skin.TableViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.CarDataForLists;
 import retrofit.Api;
@@ -29,7 +24,6 @@ import utils.Encode;
 import utils.UserManager;
 import utils.Utils;
 
-import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
@@ -69,19 +63,19 @@ public class ControllerFormCarListFromBase implements Initializable {
         initializeTableEvent();
     }
 
-    public void setIdentifier(String param, Stage stage){
+    public void setIdentifier(String param, Stage stage) {
         this.page = -1;
-        this.param= param;
+        this.param = param;
         this.primaryStage = stage;
         refreshLists();
 
     }
 
-    private void refreshLists(){
+    private void refreshLists() {
         loadMoreFromServer(param);
     }
 
-    private void initializeTableEvent(){
+    private void initializeTableEvent() {
         tblSearchResult.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 showDetails();
@@ -91,21 +85,21 @@ public class ControllerFormCarListFromBase implements Initializable {
         tblSearchResult.addEventFilter(ScrollEvent.ANY, scrollEvent -> loadMoreFromServer(param));
         //Set handler for key pressed event
         tblSearchResult.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 showDetails();
             }
-            if (event.getCode() == KeyCode.DOWN){
+            if (event.getCode() == KeyCode.DOWN) {
                 //load more data when list scrolled to end;
                 loadMoreFromServer(param);
             }
-            if(event.getCode() == KeyCode.END){
+            if (event.getCode() == KeyCode.END) {
                 //load more data from server ;
                 loadMoreFromServer(param);
             }
         });
     }
 
-    private void showDetails(){
+    private void showDetails() {
 
         try {
             FormCarDetails frm = new FormCarDetails(tblSearchResult.getSelectionModel().getSelectedItem().getIdentifier());
@@ -115,8 +109,8 @@ public class ControllerFormCarListFromBase implements Initializable {
         }
     }
 
-    private void loadMoreFromServer(String param){
-        if(getLastVisibleItem(tblSearchResult)+ 100 > page*200 && !loadingData){
+    private void loadMoreFromServer(String param) {
+        if (getLastVisibleItem(tblSearchResult) + 100 > page * 200 && !loadingData) {
             loadingData = true;
             Api.createRetrofitService().executeGetCarListFromBase(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                     new GetCarListFromBaseRequestEnvelope(++page, param)).enqueue(new Callback<GetCarListFromBaseResponseEnvelope>() {
@@ -124,12 +118,12 @@ public class ControllerFormCarListFromBase implements Initializable {
                 public void onResponse(Call<GetCarListFromBaseResponseEnvelope> call, final Response<GetCarListFromBaseResponseEnvelope> response) {
                     loadingData = false;
                     getCarListCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         ObservableList<CarDataForLists> observableList = FXCollections.observableArrayList();
                         List<CarDataShort> carDataShortList = response.body().getData().getCarDataShortList();
-                        if (carDataShortList != null){
+                        if (carDataShortList != null) {
                             int index = 0;
-                            for(CarDataShort carDataShort: carDataShortList){
+                            for (CarDataShort carDataShort : carDataShortList) {
                                 try {
                                     observableList.add(Converter.convertCarDataShortToCarDataForLists(carDataShort, index++));
                                 } catch (ParseException e) {
@@ -137,17 +131,17 @@ public class ControllerFormCarListFromBase implements Initializable {
                                 }
                             }
                             //add information to list;
-                            if(page == 0){
+                            if (page == 0) {
                                 listFromBase.clear();
                             }
                             listFromBase.addAll(observableList);
                             //show new information in UI;
                             showTable(listFromBase);
-                        }else if(page == 0){
+                        } else if (page == 0) {
                             listFromBase.clear();
                             showTable(listFromBase);
                         }
-                    }else{
+                    } else {
                         page--;
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
@@ -157,9 +151,9 @@ public class ControllerFormCarListFromBase implements Initializable {
                 public void onFailure(Call<GetCarListFromBaseResponseEnvelope> call, final Throwable t) {
                     loadingData = false;
                     page--;
-                    if(getCarListCount++ < Main.COUNT_RETRY){
+                    if (getCarListCount++ < Main.COUNT_RETRY) {
                         loadMoreFromServer(param);
-                    }else {
+                    } else {
                         getCarListCount = 0;
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
                     }
@@ -169,7 +163,7 @@ public class ControllerFormCarListFromBase implements Initializable {
 
     }
 
-    private void showTable(ObservableList<CarDataForLists> observableList){
+    private void showTable(ObservableList<CarDataForLists> observableList) {
         tblSearchResult.setItems(observableList);
         tbcProtocolNumber.setCellValueFactory(cellData -> cellData.getValue().protocolNumberProperty());
         tbcProtocolNumber.setCellValueFactory(cellData -> cellData.getValue().protocolNumberProperty());
@@ -184,13 +178,14 @@ public class ControllerFormCarListFromBase implements Initializable {
 
     /**
      * Get last visible item on UI in table.
+     *
      * @param table TableView
      * @return lat visible item from table or 0 if table is null;
      */
-    private int getLastVisibleItem(TableView<?> table){
-        try{
-            return ((VirtualFlow)((TableViewSkin<?>) table.getSkin() ).getChildren().get(1)).getLastVisibleCell().getIndex();
-        }catch (NullPointerException e){
+    private int getLastVisibleItem(TableView<?> table) {
+        try {
+            return ((VirtualFlow) ((TableViewSkin<?>) table.getSkin()).getChildren().get(1)).getLastVisibleCell().getIndex();
+        } catch (NullPointerException e) {
             return 0;
         }
 

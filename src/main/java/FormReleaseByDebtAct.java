@@ -11,19 +11,19 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class FormReleaseByDebtAct{
+public class FormReleaseByDebtAct {
     private int identifier;
     private ChangerListener listener;
 
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_release_by_debt_act.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormReleaseByDebtAct controllerFormReleaseByDebtAct = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
-            }else{
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Выдача по долговому акту.");
@@ -37,7 +37,7 @@ public class FormReleaseByDebtAct{
 
     }
 
-    public FormReleaseByDebtAct(int identifier, ChangerListener listener){
+    public FormReleaseByDebtAct(int identifier, ChangerListener listener) {
         this.identifier = identifier;
         this.listener = listener;
     }

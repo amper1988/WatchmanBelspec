@@ -12,11 +12,11 @@ public class ControllerFormLoading implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       lblInfo.setMaxWidth(Double.MAX_VALUE);
+        lblInfo.setMaxWidth(Double.MAX_VALUE);
         lblInfo.setAlignment(Pos.CENTER);
     }
 
-    public  void setInfo(String info){
+    public void setInfo(String info) {
         lblInfo.setText(info);
     }
 }

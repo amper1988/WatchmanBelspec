@@ -48,7 +48,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerFormCarDetails implements Initializable, ImageContextMenuListener, ChangerListener{
+public class ControllerFormCarDetails implements Initializable, ImageContextMenuListener, ChangerListener {
     @FXML
     private Label lblManufTitle;
     @FXML
@@ -206,16 +206,15 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
     private CarDataFull carData = null;
 
 
-
-    public CarDataFull getCarData(){
+    public CarDataFull getCarData() {
         return this.carData;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       ImageContextMenu imageContextMenu = new ImageContextMenu(imvImage1);
-       imageContextMenu.setListener(this);
-       ImageContextMenu imageContextMenu2 = new ImageContextMenu(imvImage2);
+        ImageContextMenu imageContextMenu = new ImageContextMenu(imvImage1);
+        imageContextMenu.setListener(this);
+        ImageContextMenu imageContextMenu2 = new ImageContextMenu(imvImage2);
         imageContextMenu2.setListener(this);
         ImageContextMenu imageContextMenu3 = new ImageContextMenu(imvImage3);
         imageContextMenu3.setListener(this);
@@ -225,7 +224,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
         initializeButtonsEvent();
     }
 
-    private void initializeButtonsEvent(){
+    private void initializeButtonsEvent() {
         btnRelease.setOnAction(actionEvent -> {
             FormReleaseCar formReleaseCar = new FormReleaseCar(identifier, ControllerFormCarDetails.this);
             formReleaseCar.start(null);
@@ -233,9 +232,9 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
 
         btnCreateReceipt.setOnAction(actionEvent -> {
             FormTakeReceipt frm = new FormTakeReceipt(identifier, ControllerFormCarDetails.this, carData.getCarId());
-            if(carData.isBlock()){
+            if (carData.isBlock()) {
                 Platform.runLater(() -> Utils.showAlertMessage("Снимите арест.", "Автомобиль находится под арестом. Перед выставлением счета необходимо снять арест."));
-            }else{
+            } else {
                 try {
                     frm.start(null);
                 } catch (IOException e) {
@@ -254,26 +253,26 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 public void onResponse(Call<CreateBackToParkingResponseEnvelope> call, final Response<CreateBackToParkingResponseEnvelope> response) {
                     blockUI(false, "Данные получены от сервера.");
                     returnToParkingCount = 0;
-                    if(response.code() == 200){
-                        if(response.body().getServerAnswer().getCode() == 1){
+                    if (response.code() == 200) {
+                        if (response.body().getServerAnswer().getCode() == 1) {
                             Platform.runLater(() -> {
                                 Utils.showAlertMessage("Запрос успешно завершен", response.body().getServerAnswer().getDescription());
                                 setIdentifier(identifier, primaryStage);
                                 DataChangeObserver.getInstance().dataChangeNotify();
                             });
-                        }else{
+                        } else {
                             Platform.runLater(() -> Utils.showAlertMessage("Ответ сервера с ошибкой " + response.body().getServerAnswer().getCode(), response.body().getServerAnswer().getDescription()));
                         }
-                    }else{
-                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                    } else {
+                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<CreateBackToParkingResponseEnvelope> call, final Throwable t) {
-                    if(returnToParkingCount++ < Main.COUNT_RETRY){
+                    if (returnToParkingCount++ < Main.COUNT_RETRY) {
                         btnReturnToParking.fire();
-                    }else{
+                    } else {
                         returnToParkingCount = 0;
                         blockUI(false, "Ошбика при отправлении запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка при отправлении запроса", t.getMessage()));
@@ -291,8 +290,8 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 public void onResponse(Call<GetDebtActDocumentResponseEnvelope> call, final Response<GetDebtActDocumentResponseEnvelope> response) {
                     blockUI(false, "Данные успешно получены с сервера.");
                     getDebtActCount = 0;
-                    if(response.code() == 200){
-                        if(response.body().getServerAnswer().getCode() == 1){
+                    if (response.code() == 200) {
+                        if (response.body().getServerAnswer().getCode() == 1) {
                             try {
                                 final File pdfFile = FileManager.createPdfFile();
                                 FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -300,24 +299,24 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                                 fos.write(fileContent);
                                 fos.close();
                                 Desktop.getDesktop().open(pdfFile);
-                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера " + response.body().getServerAnswer().getCode(), response.body().getServerAnswer().getDescription()));
                         }
-                    }else{
-                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                    } else {
+                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
 
                 }
 
                 @Override
                 public void onFailure(Call<GetDebtActDocumentResponseEnvelope> call, final Throwable t) {
-                    if(getDebtActCount++ < Main.COUNT_RETRY){
+                    if (getDebtActCount++ < Main.COUNT_RETRY) {
                         btnTakeDebtAct.fire();
-                    }else{
+                    } else {
                         getDebtActCount = 0;
                         blockUI(false, "Ошбика отправления запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
@@ -336,9 +335,9 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 public void onResponse(Call<GetProtocolResponseEnvelope> call, final Response<GetProtocolResponseEnvelope> response) {
                     blockUI(false, "Данные успешно получены с сервера.");
                     getProtocolCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                        if(serverAnswer.getCode() == 1){
+                        if (serverAnswer.getCode() == 1) {
                             try {
                                 final File pdfFile = FileManager.createPdfFile();
                                 FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -346,23 +345,23 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                                 fos.write(fileContent);
                                 fos.close();
                                 Desktop.getDesktop().open(pdfFile);
-                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                         }
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GetProtocolResponseEnvelope> call, final Throwable t) {
-                    if(getProtocolCount++ < Main.COUNT_RETRY){
+                    if (getProtocolCount++ < Main.COUNT_RETRY) {
                         btnTakeProtocol.fire();
-                    }else{
+                    } else {
                         getProtocolCount = 0;
                         blockUI(false, "Ошибка отправления запроса");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса", t.getMessage()));
@@ -380,9 +379,9 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 public void onResponse(Call<GetReceiptResponseEnvelope> call, final Response<GetReceiptResponseEnvelope> response) {
                     blockUI(false, "Данные успешно получены  с сервера.");
                     getReceiptCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                        if(serverAnswer.getCode() == 1){
+                        if (serverAnswer.getCode() == 1) {
                             try {
                                 final File pdfFile = FileManager.createPdfFile();
                                 FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -390,23 +389,23 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                                 fos.write(fileContent);
                                 fos.close();
                                 Desktop.getDesktop().open(pdfFile);
-                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                         }
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GetReceiptResponseEnvelope> call, final Throwable t) {
-                    if(getReceiptCount++ < Main.COUNT_RETRY){
+                    if (getReceiptCount++ < Main.COUNT_RETRY) {
                         btnTakeReceipt.fire();
-                    }else{
+                    } else {
                         getReceiptCount = 0;
                         blockUI(false, "Ошибка отправления запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
@@ -423,9 +422,9 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 public void onResponse(Call<GetReleaseInformationResponseEnvelope> call, final Response<GetReleaseInformationResponseEnvelope> response) {
                     blockUI(false, "Данные успешно получены с сервера.");
                     takeReleaseInformationCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                        if(serverAnswer.getCode() == 1){
+                        if (serverAnswer.getCode() == 1) {
                             try {
                                 final File pdfFile = FileManager.createPdfFile();
                                 FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -433,24 +432,24 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                                 fos.write(fileContent);
                                 fos.close();
                                 Desktop.getDesktop().open(pdfFile);
-                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                         }
 
-                    }else{
-                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                    } else {
+                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GetReleaseInformationResponseEnvelope> call, final Throwable t) {
-                    if(takeReleaseInformationCount++ < Main.COUNT_RETRY){
+                    if (takeReleaseInformationCount++ < Main.COUNT_RETRY) {
                         btnTakeReleaseInformation.fire();
-                    }else{
+                    } else {
                         takeReleaseInformationCount = 0;
                         blockUI(false, "Ошибка отправления запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправки запроса", t.getMessage()));
@@ -467,9 +466,9 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 public void onResponse(Call<GetPhotosResponseEnvelope> call, final Response<GetPhotosResponseEnvelope> response) {
                     blockUI(false, "Данные успешно получены  с сервера.");
                     takePhotosCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                        if(serverAnswer.getCode() == 1){
+                        if (serverAnswer.getCode() == 1) {
                             try {
                                 final File pdfFile = FileManager.createPdfFile();
                                 FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -477,23 +476,23 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                                 fos.write(fileContent);
                                 fos.close();
                                 Desktop.getDesktop().open(pdfFile);
-                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                         }
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<GetPhotosResponseEnvelope> call, final Throwable t) {
-                    if(takePhotosCount++ < Main.COUNT_RETRY){
+                    if (takePhotosCount++ < Main.COUNT_RETRY) {
                         btnTakePhotos.fire();
-                    }else{
+                    } else {
                         takePhotosCount = 0;
                         blockUI(false, "Ошибка отправления запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления зарпоса", t.getMessage()));
@@ -530,16 +529,16 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
         });
     }
 
-    public void setIdentifier(int identifier, Stage primaryStage){
+    public void setIdentifier(int identifier, Stage primaryStage) {
         this.identifier = identifier;
         this.primaryStage = primaryStage;
-        if(this.identifier != -1){
+        if (this.identifier != -1) {
             blockUI(true, "Получение данных о транспортном средстве.");
             getActualData();
         }
     }
 
-    public void getActualData(){
+    public void getActualData() {
         blockUI(true, "Получение данных о транспортном средстве.");
         RetrofitService retrofitService = Api.createRetrofitService();
         retrofitService.executeGetCarDetails(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
@@ -548,18 +547,18 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
             public void onResponse(Call<GetCarDetailsResponseEnvelope> call, final Response<GetCarDetailsResponseEnvelope> response) {
                 getActualDataCount = 0;
                 blockUI(false, "Данные успешно получены с сервера.");
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     Platform.runLater(() -> setData(response.body().getCarDataFull()));
-                }else{
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                } else {
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<GetCarDetailsResponseEnvelope> call, final Throwable t) {
-                if(getActualDataCount++ < Main.COUNT_RETRY){
+                if (getActualDataCount++ < Main.COUNT_RETRY) {
                     getActualData();
-                }else{
+                } else {
                     getActualDataCount = 0;
                     blockUI(false, "Ошбика при отправлении запроса.");
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка при отправлении запроса.", t.getMessage()));
@@ -569,9 +568,9 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
         });
     }
 
-    public void setData(CarDataFull carDataFull){
+    public void setData(CarDataFull carDataFull) {
         this.carData = carDataFull;
-        if(carDataFull != null){
+        if (carDataFull != null) {
             lblManufTitle.setText(carDataFull.getManufacture());
             lblStatus.setText(carDataFull.getStatus());
             lblReceiptNumberBank.setText(carDataFull.getReceiptBank());
@@ -618,11 +617,11 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
         }
     }
 
-    private void applyView(String status, boolean evacuated, boolean debtAct, boolean block){
+    private void applyView(String status, boolean evacuated, boolean debtAct, boolean block) {
         btnBlock.setDisable(block);
         btnBlockFree.setDisable(!block);
 
-        switch (status){
+        switch (status) {
             case "На стоянке":
                 vbOwnerData.setVisible(false);
                 vbReleaseData.setVisible(false);
@@ -699,7 +698,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 btnTakePhotos.setDisable(false);
                 break;
 
-            case  "Выдано по долговому акту":
+            case "Выдано по долговому акту":
                 vbOwnerData.setVisible(true);
                 vbReleaseData.setVisible(true);
                 vbStoringData.setVisible(true);
@@ -727,11 +726,11 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
 
     }
 
-    public void blockUI(boolean block, String info){
-        if(block){
-            Platform.runLater(()->{
+    public void blockUI(boolean block, String info) {
+        if (block) {
+            Platform.runLater(() -> {
                 try {
-                    if(formLoading == null){
+                    if (formLoading == null) {
                         formLoading = new FormLoading();
                     }
                     formLoading.start(primaryStage, info);
@@ -739,10 +738,10 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                     e.printStackTrace();
                 }
             });
-        }else{
+        } else {
             Platform.runLater(() -> {
                 try {
-                    if(formLoading!=null){
+                    if (formLoading != null) {
                         formLoading.stop(info);
                         formLoading = null;
                     }
@@ -762,25 +761,25 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
 
     }
 
-    public Stage getPrimaryStage(){
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 
     @Override
     public void showPicture(ImageView imv) {
-        if(imv.equals(imvImage1)){
+        if (imv.equals(imvImage1)) {
             FormImageFull frm = new FormImageFull(this.identifier, 1);
             frm.start(null);
         }
-        if(imv.equals(imvImage2)){
+        if (imv.equals(imvImage2)) {
             FormImageFull frm = new FormImageFull(this.identifier, 2);
             frm.start(null);
         }
-        if(imv.equals(imvImage3)){
+        if (imv.equals(imvImage3)) {
             FormImageFull frm = new FormImageFull(this.identifier, 3);
             frm.start(null);
         }
-        if(imv.equals(imvImage4)){
+        if (imv.equals(imvImage4)) {
             FormImageFull frm = new FormImageFull(this.identifier, 4);
             frm.start(null);
         }

@@ -1,10 +1,8 @@
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import utils.ScreenSize;
 
 import java.io.IOException;
 
@@ -20,7 +18,7 @@ public class FormCarListFromBase {
         root.setId("with_background");
         ControllerFormCarListFromBase controllerFormCarListFromBase = loader.getController();
         Stage stage;
-        if(primaryStage != null)
+        if (primaryStage != null)
             stage = primaryStage;
         else
             stage = new Stage();
@@ -34,7 +32,7 @@ public class FormCarListFromBase {
 
     }
 
-    public FormCarListFromBase(String param){
+    public FormCarListFromBase(String param) {
         this.param = param;
     }
 }

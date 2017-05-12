@@ -2,22 +2,22 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import utils.ScreenSize;
 
 import java.io.IOException;
 
 public class Main extends Application {
-    public static final String VERSION ="1.0.0.4";
-    public static final int COUNT_RETRY = 80;
+    public static final String VERSION = "1.0.0.5";
+    public static final int COUNT_RETRY = 5;
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage stage) throws IOException{
+    public void start(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_login.fxml"));
         GridPane root = loader.load();
         root.setId("with_background");

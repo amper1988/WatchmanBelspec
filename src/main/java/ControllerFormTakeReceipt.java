@@ -1,8 +1,8 @@
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerFormTakeReceipt implements Initializable{
+public class ControllerFormTakeReceipt implements Initializable {
     @FXML
     private Label lblCommonCosts;
     @FXML
@@ -147,74 +147,74 @@ public class ControllerFormTakeReceipt implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         wvMaps.setContextMenuEnabled(false);
         txtTechCertSeries.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER){
+            if (event.getCode() == KeyCode.ENTER) {
                 txtTechCertNumber.requestFocus();
             }
         });
-        txtTechCertSeries.focusedProperty().addListener((observable, oldValue, newValue)->{
-                    if(txtTechCertSeries.getText() != null)
-                        txtTechCertSeries.setText(txtTechCertSeries.getText().toUpperCase());
+        txtTechCertSeries.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtTechCertSeries.getText() != null)
+                txtTechCertSeries.setText(txtTechCertSeries.getText().toUpperCase());
         });
         txtTechCertNumber.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtOwnerName.requestFocus();
         });
-        txtTechCertNumber.focusedProperty().addListener((observable, oldValue, newValue)->{
-                    if(txtTechCertNumber.getText() != null)
-                        txtTechCertNumber.setText(txtTechCertNumber.getText().toUpperCase());
+        txtTechCertNumber.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtTechCertNumber.getText() != null)
+                txtTechCertNumber.setText(txtTechCertNumber.getText().toUpperCase());
         });
         txtOwnerName.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtOwnerAddress.requestFocus();
         });
-        txtOwnerName.focusedProperty().addListener((observable, oldValue, newValue)->{
-            if(txtOwnerName.getText() != null)
+        txtOwnerName.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtOwnerName.getText() != null)
                 txtOwnerName.setText(txtOwnerName.getText().toUpperCase());
         });
         txtOwnerAddress.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtDriverLicenseSeries.requestFocus();
         });
-        txtOwnerAddress.focusedProperty().addListener((observable, oldValue, newValue)->{
-            if(txtOwnerAddress.getText() != null)
+        txtOwnerAddress.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtOwnerAddress.getText() != null)
                 txtOwnerAddress.setText(txtOwnerAddress.getText().toUpperCase());
         });
         txtDriverLicenseSeries.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtDriverLicenseNumber.requestFocus();
         });
-        txtDriverLicenseSeries.focusedProperty().addListener((observable, oldValue, newValue)->{
-            if(txtDriverLicenseSeries.getText() != null)
+        txtDriverLicenseSeries.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtDriverLicenseSeries.getText() != null)
                 txtDriverLicenseSeries.setText(txtDriverLicenseSeries.getText().toUpperCase());
         });
         txtDriverLicenseNumber.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtDriverName.requestFocus();
         });
-        txtDriverLicenseNumber.focusedProperty().addListener((observable, oldValue, newValue)->{
-            if(txtDriverLicenseNumber.getText() != null)
+        txtDriverLicenseNumber.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtDriverLicenseNumber.getText() != null)
                 txtDriverLicenseNumber.setText(txtDriverLicenseNumber.getText().toUpperCase());
         });
         txtDriverName.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtDriverAddress.requestFocus();
         });
-        txtDriverName.focusedProperty().addListener((observable, oldValue, newValue)->{
-            if(txtDriverName.getText() != null)
+        txtDriverName.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtDriverName.getText() != null)
                 txtDriverName.setText(txtDriverName.getText().toUpperCase());
         });
         txtDriverAddress.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 txtDriverContact.requestFocus();
         });
-        txtDriverAddress.focusedProperty().addListener((observable, oldValue, newValue)->{
-            if(txtDriverAddress.getText() != null)
+        txtDriverAddress.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (txtDriverAddress.getText() != null)
                 txtDriverAddress.setText(txtDriverAddress.getText().toUpperCase());
         });
         initializeButtonEvent();
     }
 
-    private void initializeButtonEvent(){
+    private void initializeButtonEvent() {
         btnCopyData.setOnAction(actionEvent -> {
             txtDriverName.setText(txtOwnerName.getText());
             txtDriverAddress.setText(txtOwnerAddress.getText());
@@ -222,7 +222,7 @@ public class ControllerFormTakeReceipt implements Initializable{
 
         btnTakeReceipt.setOnAction(actionEvent -> {
             blockUI(true, "Отправление данных на сервер для создания счета.");
-            if(confirmData()){
+            if (confirmData()) {
                 RetrofitService retrofitService = Api.createRetrofitService();
                 retrofitService.executeCreateReceipt(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                         new CreateReceiptRequestEnvelope(identifier, txtTechCertSeries.getText(), txtTechCertNumber.getText(), txtOwnerName.getText(), txtOwnerAddress.getText(),
@@ -230,32 +230,32 @@ public class ControllerFormTakeReceipt implements Initializable{
                                 cbDebtActBool.isSelected(), txtDebtActNumber.getText(), lblReceiptDate.getText())).enqueue(new Callback<CreateReceiptResponseEnvelope>() {
                     @Override
                     public void onResponse(Call<CreateReceiptResponseEnvelope> call, final Response<CreateReceiptResponseEnvelope> response) {
-                        if(response.code() == 200){
+                        if (response.code() == 200) {
                             final int serverAnswer = response.body().getServerAnswer().getCode();
-                            if(serverAnswer == 1){
+                            if (serverAnswer == 1) {
                                 String documentString = response.body().getServerAnswer().getDescription();
                                 try {
                                     final File pdfFile = FileManager.createPdfFile();
                                     FileOutputStream fos = new FileOutputStream(pdfFile.getPath());
-                                    byte [] bytePDF = Converter.convertBase64StringToByteArray(documentString);
+                                    byte[] bytePDF = Converter.convertBase64StringToByteArray(documentString);
                                     fos.write(bytePDF);
                                     fos.close();
                                     Desktop.getDesktop().open(pdfFile);
                                     DataChangeObserver.getInstance().dataChangeNotify();
                                     Platform.runLater(() -> Utils.showAlertMessage("Счет успешно выставлен", "Если файл не открылся автоматические его можно найти по пути: " + pdfFile.getAbsolutePath()));
                                     Platform.runLater(() -> close());
-                                    if(controllerFormCarDetails !=null)
+                                    if (controllerFormCarDetails != null)
                                         controllerFormCarDetails.getActualData();
 
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
 
-                            }else {
+                            } else {
                                 Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера " + serverAnswer, response.body().getServerAnswer().getDescription()));
                             }
-                        }else{
-                            Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                        } else {
+                            Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                         }
                         blockUI(false, "Данные успешно получены.");
                         takeReceiptCount = 0;
@@ -263,9 +263,9 @@ public class ControllerFormTakeReceipt implements Initializable{
 
                     @Override
                     public void onFailure(Call<CreateReceiptResponseEnvelope> call, final Throwable t) {
-                        if(takeReceiptCount++ < Main.COUNT_RETRY){
+                        if (takeReceiptCount++ < Main.COUNT_RETRY) {
                             btnTakeReceipt.fire();
-                        }else{
+                        } else {
                             takeReceiptCount = 0;
                             blockUI(false, "Ошибка при отправлении запроса.");
                             Platform.runLater(() -> Utils.showAlertMessage("Ошибка при отправлении запроса", t.getMessage()));
@@ -273,7 +273,7 @@ public class ControllerFormTakeReceipt implements Initializable{
 
                     }
                 });
-            }else{
+            } else {
                 blockUI(false, "Данные не заполнены.");
                 Platform.runLater(() -> Utils.showAlertMessage("Данные не заполнены", "Проверьте введенные данные."));
             }
@@ -283,20 +283,20 @@ public class ControllerFormTakeReceipt implements Initializable{
         txtDebtActNumber.setVisible(false);
     }
 
-    private void close(){
-        if(primaryStage!= null){
+    private void close() {
+        if (primaryStage != null) {
             primaryStage.close();
-        }else{
-            ((Stage)imvImage1.getScene().getWindow()).close();
+        } else {
+            ((Stage) imvImage1.getScene().getWindow()).close();
         }
     }
 
-    public void setIdentifier(int identifier, Stage primaryStage, ControllerFormCarDetails controllerFormCarDetails, String carId){
+    public void setIdentifier(int identifier, Stage primaryStage, ControllerFormCarDetails controllerFormCarDetails, String carId) {
         this.identifier = identifier;
         this.primaryStage = primaryStage;
         this.controllerFormCarDetails = controllerFormCarDetails;
         this.carId = carId;
-        if(this.identifier != -1 ){
+        if (this.identifier != -1) {
             getCarDetails();
             getReceiptInformation();
             getOwnerDriverData();
@@ -311,21 +311,21 @@ public class ControllerFormTakeReceipt implements Initializable{
             public void onResponse(Call<GetOwnerDriverDataResponseEnvelope> call, final Response<GetOwnerDriverDataResponseEnvelope> response) {
                 blockUI(false, "Данные о вовдителе (собственнике) получены.");
                 getOwnerInformationCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     Platform.runLater(() -> {
                         setOwnerData(response.body().getOwnerDriverData());
                         txtTechCertSeries.requestFocus();
                     });
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<GetOwnerDriverDataResponseEnvelope> call, final Throwable t) {
-                if(getOwnerInformationCount++ < Main.COUNT_RETRY){
+                if (getOwnerInformationCount++ < Main.COUNT_RETRY) {
                     getOwnerDriverData();
-                }else{
+                } else {
                     blockUI(false, "При попытке получения данных собственника произошла ошибка.");
                     getOwnerInformationCount = 0;
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления зарпоса", t.getMessage()));
@@ -343,20 +343,20 @@ public class ControllerFormTakeReceipt implements Initializable{
             public void onResponse(Call<GetReceiptInformationResponseEnvelope> call, final Response<GetReceiptInformationResponseEnvelope> response) {
                 blockUI(false, "Данные о выдаче получены.");
                 getReceiptInformationCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     Platform.runLater(() -> showReceiptInformation(response.body().getData()));
-                }else
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка "+response.code(), Converter.convertResponseToSting(response.errorBody())));
+                } else
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка " + response.code(), Converter.convertResponseToSting(response.errorBody())));
             }
 
             @Override
             public void onFailure(Call<GetReceiptInformationResponseEnvelope> call, final Throwable t) {
-                if(getReceiptInformationCount++ < Main.COUNT_RETRY ){
+                if (getReceiptInformationCount++ < Main.COUNT_RETRY) {
                     getReceiptInformation();
-                }else{
+                } else {
                     blockUI(false, "При отправлении запроса о данных выдачи произошла ошибка.");
                     getReceiptInformationCount = 0;
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса" ,t.getMessage()));
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
                 }
             }
         });
@@ -371,24 +371,24 @@ public class ControllerFormTakeReceipt implements Initializable{
             public void onResponse(Call<GetCarDetailsResponseEnvelope> call, final Response<GetCarDetailsResponseEnvelope> response) {
                 blockUI(false, "Данные транспортного средства успешно получены.");
                 getCarDetailsCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     final CarDataFull carData = response.body().getCarDataFull();
-                    if(carData != null){
+                    if (carData != null) {
                         Platform.runLater(() -> showInformation(carData));
 
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Пустой ответ сервера.", "Данных на сервере не найдено. Повторите запрос позже."));
                     }
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка полученного ответа.", Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<GetCarDetailsResponseEnvelope> call, final Throwable t) {
-                if(getCarDetailsCount++ < Main.COUNT_RETRY){
+                if (getCarDetailsCount++ < Main.COUNT_RETRY) {
                     getCarDetails();
-                }else{
+                } else {
                     getCarDetailsCount = 0;
                     blockUI(false, "Ошибка при отправлении запроса.");
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка при отправлении запроса.", t.getMessage()));
@@ -397,59 +397,59 @@ public class ControllerFormTakeReceipt implements Initializable{
         });
     }
 
-    private void showReceiptInformation(GetReceiptInformationResponseData data){
-        if(data != null){
+    private void showReceiptInformation(GetReceiptInformationResponseData data) {
+        if (data != null) {
             lblCommonCosts.setText(data.getCommonCosts());
             lblReceiptDate.setText(data.getReceiptDate());
             lblParkingCosts.setText(data.getParkingCosts());
         }
     }
 
-    private boolean confirmData(){
-        if(txtTechCertSeries.getText() == null || txtTechCertSeries.getText().isEmpty()){
+    private boolean confirmData() {
+        if (txtTechCertSeries.getText() == null || txtTechCertSeries.getText().isEmpty()) {
             txtTechCertSeries.requestFocus();
             return false;
         }
-        if(txtTechCertNumber.getText() == null || txtTechCertNumber.getText().isEmpty()){
+        if (txtTechCertNumber.getText() == null || txtTechCertNumber.getText().isEmpty()) {
             txtTechCertNumber.requestFocus();
             return false;
         }
-        if(txtOwnerName.getText() == null || txtOwnerName.getText().isEmpty()){
+        if (txtOwnerName.getText() == null || txtOwnerName.getText().isEmpty()) {
             txtOwnerName.requestFocus();
             return false;
         }
-        if(txtOwnerAddress.getText() == null || txtOwnerAddress.getText().isEmpty()){
+        if (txtOwnerAddress.getText() == null || txtOwnerAddress.getText().isEmpty()) {
             txtOwnerAddress.requestFocus();
             return false;
         }
-        if(txtDriverLicenseSeries.getText() == null || txtDriverLicenseSeries.getText().isEmpty()){
+        if (txtDriverLicenseSeries.getText() == null || txtDriverLicenseSeries.getText().isEmpty()) {
             txtDriverLicenseSeries.requestFocus();
             return false;
         }
-        if(txtDriverLicenseNumber.getText() == null || txtDriverLicenseNumber.getText().isEmpty()){
+        if (txtDriverLicenseNumber.getText() == null || txtDriverLicenseNumber.getText().isEmpty()) {
             txtDriverLicenseNumber.requestFocus();
             return false;
         }
-        if(txtDriverName.getText() == null || txtDriverName.getText().isEmpty()){
+        if (txtDriverName.getText() == null || txtDriverName.getText().isEmpty()) {
             txtDriverName.requestFocus();
-            return  false;
+            return false;
         }
-        if(txtDriverAddress.getText() == null || txtDriverAddress.getText().isEmpty()){
+        if (txtDriverAddress.getText() == null || txtDriverAddress.getText().isEmpty()) {
             txtDriverAddress.requestFocus();
             return false;
         }
-        if(cbDebtActBool.isSelected() && (txtDebtActNumber.getText() == null || txtDebtActNumber.getText().isEmpty())){
+        if (cbDebtActBool.isSelected() && (txtDebtActNumber.getText() == null || txtDebtActNumber.getText().isEmpty())) {
             txtDebtActNumber.requestFocus();
             return false;
         }
-        if(txtDriverContact.getText() == null || txtDriverContact.getText().isEmpty()){
+        if (txtDriverContact.getText() == null || txtDriverContact.getText().isEmpty()) {
             txtDriverContact.requestFocus();
             return false;
         }
         return true;
     }
 
-    private void showInformation(CarDataFull carData){
+    private void showInformation(CarDataFull carData) {
         lblManufacture.setText(carData.getManufacture());
         lblModel.setText(carData.getModel());
         lblColor.setText(carData.getColor());
@@ -459,7 +459,7 @@ public class ControllerFormTakeReceipt implements Initializable{
         lblProtocolNumber.setText(carData.getProtocolNumber());
         lblClause.setText(carData.getClause());
         boolean evacuated = carData.isEvacuatedBool();
-        lblEvacuatedBool.setText( evacuated ? "Да": "Нет");
+        lblEvacuatedBool.setText(evacuated ? "Да" : "Нет");
         lblEvacuationCosts.setText(carData.getEvacuationCosts());
         lblEvacuationCosts.setVisible(evacuated);
         lblEvacuationOrganization.setText(carData.getEvacuationOrganization());
@@ -482,11 +482,11 @@ public class ControllerFormTakeReceipt implements Initializable{
         webEngine.loadContent(carData.getMaps());
     }
 
-    private void blockUI(boolean bool, String info){
-        if(bool){
-            Platform.runLater(()->{
+    private void blockUI(boolean bool, String info) {
+        if (bool) {
+            Platform.runLater(() -> {
                 try {
-                    if(formLoading == null){
+                    if (formLoading == null) {
                         formLoading = new FormLoading();
                     }
                     formLoading.start(primaryStage, info);
@@ -494,11 +494,11 @@ public class ControllerFormTakeReceipt implements Initializable{
                     e.printStackTrace();
                 }
             });
-        }else{
+        } else {
             try {
                 Platform.runLater(() -> {
                     try {
-                        if(formLoading != null){
+                        if (formLoading != null) {
                             formLoading.stop(info);
                             formLoading = null;
                         }
@@ -518,7 +518,7 @@ public class ControllerFormTakeReceipt implements Initializable{
         vbRight.setVisible(!bool);
     }
 
-    private void setOwnerData(OwnerDriverData data){
+    private void setOwnerData(OwnerDriverData data) {
         txtTechCertSeries.setText(data.getTechCertSeries());
         txtTechCertNumber.setText(data.getTechCertNumber());
         txtOwnerName.setText(data.getOwnerName());

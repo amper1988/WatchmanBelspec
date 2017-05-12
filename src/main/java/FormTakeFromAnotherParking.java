@@ -18,12 +18,12 @@ public class FormTakeFromAnotherParking {
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_take_from_another_parking.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormTakeFromAnotherParking controllerFormTakeFromAnotherParking = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
-            }else{
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Принятие перемещаемого транспортного средства.");
@@ -37,7 +37,7 @@ public class FormTakeFromAnotherParking {
 
     }
 
-    public FormTakeFromAnotherParking(int identifier, ChangerListener listener){
+    public FormTakeFromAnotherParking(int identifier, ChangerListener listener) {
         this.identifier = identifier;
         this.listener = listener;
     }

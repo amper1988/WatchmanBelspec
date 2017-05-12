@@ -1,8 +1,6 @@
 import interfaces.ChangerListener;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -46,9 +44,9 @@ public class ControllerFormChooseOrganizationForArrest implements Initializable 
         getOrganizationForArrest();
 
         btnArrest.setOnAction(actionEvent -> {
-            if(confirmData()){
+            if (confirmData()) {
                 createArrest();
-            }else{
+            } else {
                 Utils.showAlertMessage("Значение не заполнено", "Выберите организацию");
             }
         });
@@ -61,31 +59,31 @@ public class ControllerFormChooseOrganizationForArrest implements Initializable 
                     @Override
                     public void onResponse(Call<CreateArrestWithOrganizationChangeResponseEnvelope> call, final Response<CreateArrestWithOrganizationChangeResponseEnvelope> response) {
                         createArrestCount = 0;
-                        if(response.code() == 200){
+                        if (response.code() == 200) {
                             final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                            if(serverAnswer.getCode() == 1){
+                            if (serverAnswer.getCode() == 1) {
                                 Platform.runLater(() -> {
                                     Utils.showAlertMessage("Успешно арестовано.", serverAnswer.getDescription());
                                     DataChangeObserver.getInstance().dataChangeNotify();
                                     controllerFormCarDetails.getActualData();
-                                    if(listener != null){
+                                    if (listener != null) {
                                         listener.onChangeData();
                                         close();
                                     }
                                 });
-                            }else{
-                                Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера "+ serverAnswer.getCode(), serverAnswer.getDescription()));
+                            } else {
+                                Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                             }
-                        }else{
-                            Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                        } else {
+                            Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<CreateArrestWithOrganizationChangeResponseEnvelope> call, final Throwable t) {
-                        if(createArrestCount++ < Main.COUNT_RETRY){
+                        if (createArrestCount++ < Main.COUNT_RETRY) {
                             createArrest();
-                        }else{
+                        } else {
                             createArrestCount = 0;
                             Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
                         }
@@ -99,18 +97,18 @@ public class ControllerFormChooseOrganizationForArrest implements Initializable 
             @Override
             public void onResponse(Call<GetOrganizationForArrestResponseEnvelope> call, final Response<GetOrganizationForArrestResponseEnvelope> response) {
                 getOrganizationForArrestCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     cmbOrganization.setItems(FXCollections.observableArrayList(response.body().getOrganizationListAsString()));
-                }else{
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                } else {
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<GetOrganizationForArrestResponseEnvelope> call, final Throwable t) {
-                if(getOrganizationForArrestCount++ < Main.COUNT_RETRY){
+                if (getOrganizationForArrestCount++ < Main.COUNT_RETRY) {
                     getOrganizationForArrest();
-                }else{
+                } else {
                     getOrganizationForArrestCount = 0;
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса", t.getMessage()));
                 }
@@ -119,7 +117,7 @@ public class ControllerFormChooseOrganizationForArrest implements Initializable 
         });
     }
 
-    public void setData(int identifier, String whoArrested, String arrestReason, ControllerFormCarDetails controllerFormCarDetails, ChangerListener listener){
+    public void setData(int identifier, String whoArrested, String arrestReason, ControllerFormCarDetails controllerFormCarDetails, ChangerListener listener) {
         this.identifier = identifier;
         this.whoArrested = whoArrested;
         this.arrestReason = arrestReason;
@@ -127,14 +125,14 @@ public class ControllerFormChooseOrganizationForArrest implements Initializable 
         this.listener = listener;
     }
 
-    private boolean confirmData(){
-        if(cmbOrganization.getSelectionModel().getSelectedItem().isEmpty()){
+    private boolean confirmData() {
+        if (cmbOrganization.getSelectionModel().getSelectedItem().isEmpty()) {
             return false;
         }
         return true;
     }
 
-    public void close(){
-        ((Stage)btnArrest.getScene().getWindow()).close();
+    public void close() {
+        ((Stage) btnArrest.getScene().getWindow()).close();
     }
 }

@@ -1,24 +1,23 @@
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import utils.ScreenSize;
 
 import java.io.IOException;
 
-public class FormSelectOwner{
+public class FormSelectOwner {
 
-    public void start(Stage primaryStage) throws IOException{
+    public void start(Stage primaryStage) throws IOException {
         Stage stage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_select_parking.fxml"));
         BorderPane root = loader.load();
         root.setId("with_background");
         ControllerSelectOwner controllerSelectOwner = loader.getController();
-        if(primaryStage !=null){
+        if (primaryStage != null) {
             stage = primaryStage;
-        }else{
+        } else {
             stage = new Stage();
         }
         stage.setTitle("Электронный учет. Форма выбора стоянки");

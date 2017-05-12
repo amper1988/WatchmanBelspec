@@ -32,7 +32,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-public class Controller implements Initializable{
+public class Controller implements Initializable {
     @FXML
     private Button btnSend;
     @FXML
@@ -53,74 +53,74 @@ public class Controller implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        txfName.addEventHandler(KeyEvent.KEY_PRESSED, event ->{
-                    if(event.getCode() == KeyCode.ENTER )
-                        pwfPwd.requestFocus();
+        txfName.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                pwfPwd.requestFocus();
 
-                });
-
-        pwfPwd.addEventHandler(KeyEvent.KEY_PRESSED, event->{
-                if(event.getCode() == KeyCode.ENTER)
-                    login();
         });
-        btnSend.setOnAction(event-> login());
+
+        pwfPwd.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ENTER)
+                login();
+        });
+        btnSend.setOnAction(event -> login());
     }
 
-    private void login(){
-        try{
+    private void login() {
+        try {
             blockUI(true, "Проверяются введенные данные");
             RetrofitService retrofitService = Api.createRetrofitService();
-            try{
+            try {
                 retrofitService
-                .executeTestOperation(
-                        Encode.getBasicAuthTemplate(
-                                txfName.getText(),
-                                pwfPwd.getText()
-                        ),
-                        new TestRequestEnvelope()
-                )
-                .enqueue(new Callback<TestResponseEnvelope>() {
-                    @Override
-                    public void onResponse(Call<TestResponseEnvelope> call, Response<TestResponseEnvelope> response) {
-                        loginCount =0;
-                        if(response.code() == 200){
-                            TestResponseEnvelope responseEnvelope = response.body();
-                            txtResult.setText(responseEnvelope.getTestData().getFullName());
-                            UserManager user = UserManager.getInstanse();
-                            user.setUserData(
-                                txfName.getText(),
-                                pwfPwd.getText(),
-                                responseEnvelope.getTestData().getFullName(),
-                                responseEnvelope.getTestData().getUserType(),
-                                true,
-                                responseEnvelope.getTestData().getOrganization()
-                            );
-                            checkUpdate();
-                        }else{
-                            blockUI(false, "Получен ответ.");
-                            txtResult.setText(Converter.convertResponseToSting(response.errorBody()));
-                        }
-                    }
+                        .executeTestOperation(
+                                Encode.getBasicAuthTemplate(
+                                        txfName.getText(),
+                                        pwfPwd.getText()
+                                ),
+                                new TestRequestEnvelope()
+                        )
+                        .enqueue(new Callback<TestResponseEnvelope>() {
+                            @Override
+                            public void onResponse(Call<TestResponseEnvelope> call, Response<TestResponseEnvelope> response) {
+                                loginCount = 0;
+                                if (response.code() == 200) {
+                                    TestResponseEnvelope responseEnvelope = response.body();
+                                    txtResult.setText(responseEnvelope.getTestData().getFullName());
+                                    UserManager user = UserManager.getInstanse();
+                                    user.setUserData(
+                                            txfName.getText(),
+                                            pwfPwd.getText(),
+                                            responseEnvelope.getTestData().getFullName(),
+                                            responseEnvelope.getTestData().getUserType(),
+                                            true,
+                                            responseEnvelope.getTestData().getOrganization()
+                                    );
+                                    checkUpdate();
+                                } else {
+                                    blockUI(false, "Получен ответ.");
+                                    txtResult.setText(Converter.convertResponseToSting(response.errorBody()));
+                                }
+                            }
 
-                    @Override
-                    public void onFailure(Call<TestResponseEnvelope> call, Throwable t) {
-                        if(loginCount++ < Main.COUNT_RETRY){
-                            login();
-                        }else{
-                            blockUI(false, "Получен ответ.");
-                            txtResult.setText(t.getLocalizedMessage());
-                            Platform.runLater(()->Utils.showAlertMessage("Ошбика отправления запроса ", t.getMessage()));
-                            loginCount = 0;
-                        }
+                            @Override
+                            public void onFailure(Call<TestResponseEnvelope> call, Throwable t) {
+                                if (loginCount++ < Main.COUNT_RETRY) {
+                                    login();
+                                } else {
+                                    blockUI(false, "Получен ответ.");
+                                    txtResult.setText(t.getLocalizedMessage());
+                                    Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса ", t.getMessage()));
+                                    loginCount = 0;
+                                }
 
-                    }
-                });
-            }catch (Throwable t){
+                            }
+                        });
+            } catch (Throwable t) {
                 blockUI(false, "Получен ответ.");
                 txtResult.setText(t.getMessage());
             }
 
-        }catch (Throwable e){
+        } catch (Throwable e) {
             blockUI(false, "Получен ответ.");
             txtResult.setText(e.getMessage());
         }
@@ -128,12 +128,13 @@ public class Controller implements Initializable{
 
     /**
      * Block or unblock UI components depends on "block" argument
-     * @param block  boolean (set "true" to block, set "false" to unblock)
+     *
+     * @param block boolean (set "true" to block, set "false" to unblock)
      */
-    private void blockUI(boolean block, String info){
-        if(block){
-            Platform.runLater(()->{
-                if(formLoading == null){
+    private void blockUI(boolean block, String info) {
+        if (block) {
+            Platform.runLater(() -> {
+                if (formLoading == null) {
                     formLoading = new FormLoading();
 
                 }
@@ -143,9 +144,9 @@ public class Controller implements Initializable{
                     e.printStackTrace();
                 }
             });
-        }else{
+        } else {
             Platform.runLater(() -> {
-                if(formLoading != null){
+                if (formLoading != null) {
                     try {
                         formLoading.stop(info);
                     } catch (Exception e) {
@@ -162,75 +163,75 @@ public class Controller implements Initializable{
 
     }
 
-    private void checkUpdate(){
+    private void checkUpdate() {
         blockUI(true, "Проверка наличия обновления.");
         Api.createRetrofitService()
-        .executeCheckUpdateWatchman(
-            Encode.getBasicAuthTemplate(
-                UserManager.getInstanse().getmLogin(),
-                UserManager.getInstanse().getmPassword()
-            ),
-            new CheckUpdateWatchmanRequestEnvelope(Main.VERSION)
-        )
-        .enqueue(new Callback<CheckUpdateWatchmanResponseEnvelope>() {
-            @Override
-            public void onResponse(Call<CheckUpdateWatchmanResponseEnvelope> call, Response<CheckUpdateWatchmanResponseEnvelope> response) {
-                checkUpdateCount = 0;
-                if(response.code() == 200){
-                    ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 5){
-                        Platform.runLater(()-> {
-                            try{
-                                FormSelectOwner frm = new FormSelectOwner();
-                                frm.start(primaryStage);
-                            }catch (IOException e){
-                                e.printStackTrace();
+                .executeCheckUpdateWatchman(
+                        Encode.getBasicAuthTemplate(
+                                UserManager.getInstanse().getmLogin(),
+                                UserManager.getInstanse().getmPassword()
+                        ),
+                        new CheckUpdateWatchmanRequestEnvelope(Main.VERSION)
+                )
+                .enqueue(new Callback<CheckUpdateWatchmanResponseEnvelope>() {
+                    @Override
+                    public void onResponse(Call<CheckUpdateWatchmanResponseEnvelope> call, Response<CheckUpdateWatchmanResponseEnvelope> response) {
+                        checkUpdateCount = 0;
+                        if (response.code() == 200) {
+                            ServerAnswer serverAnswer = response.body().getServerAnswer();
+                            if (serverAnswer.getCode() == 5) {
+                                Platform.runLater(() -> {
+                                    try {
+                                        FormSelectOwner frm = new FormSelectOwner();
+                                        frm.start(primaryStage);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+                            } else if (serverAnswer.getCode() == 1) {
+                                try {
+                                    blockUI(false, "Обновления найдены.");
+                                    txfName.setDisable(true);
+                                    pwfPwd.setDisable(true);
+                                    btnSend.setDisable(true);
+                                    txtResult.setText("Идет обновление компонентов. Дождитесь окончания. \n Если программа попросит внести изменения в систему, нажмите 'Yes' ('Да')");
+                                    File exeFile = FileManager.createExeFile();
+                                    FileOutputStream fos = new FileOutputStream(exeFile);
+                                    byte[] fileContent = Converter.convertBase64StringToByteArray(serverAnswer.getDescription());
+                                    fos.write(fileContent);
+                                    fos.close();
+                                    Desktop.getDesktop().open(exeFile);
+                                    Platform.exit();
+                                    System.exit(0);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                blockUI(false, "Ошбика сервера.");
+                                Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                             }
-                        });
-                    }else if(serverAnswer.getCode() == 1){
-                        try {
-                            blockUI(false, "Обновления найдены.");
-                            txfName.setDisable(true);
-                            pwfPwd.setDisable(true);
-                            btnSend.setDisable(true);
-                            txtResult.setText("Идет обновление компонентов. Дождитесь окончания. \n Если программа попросит внести изменения в систему, нажмите 'Yes' ('Да')");
-                            File exeFile = FileManager.createExeFile();
-                            FileOutputStream fos = new FileOutputStream(exeFile);
-                            byte[] fileContent = Converter.convertBase64StringToByteArray(serverAnswer.getDescription());
-                            fos.write(fileContent);
-                            fos.close();
-                            Desktop.getDesktop().open(exeFile);
-                            Platform.exit();
-                            System.exit(0);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        } else {
+                            blockUI(false, "Ошибка сервера.");
+                            Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                         }
-                    }else{
-                        blockUI(false, "Ошбика сервера.");
-                        Platform.runLater(()-> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
+
                     }
-                }else{
-                    blockUI(false, "Ошибка сервера.");
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
-                }
 
-            }
+                    @Override
+                    public void onFailure(Call<CheckUpdateWatchmanResponseEnvelope> call, Throwable t) {
+                        if (checkUpdateCount++ < Main.COUNT_RETRY) {
+                            checkUpdate();
+                        } else {
+                            blockUI(false, "Ошибка отправления запроса.");
+                            Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса", "Произведено " + checkUpdateCount + " попыток. При попытке обнолвения:  " + t.getMessage()));
+                            checkUpdateCount = 0;
+                        }
 
-            @Override
-            public void onFailure(Call<CheckUpdateWatchmanResponseEnvelope> call, Throwable t) {
-                if(checkUpdateCount++ < Main.COUNT_RETRY){
-                    checkUpdate();
-                }else{
-                    blockUI(false, "Ошибка отправления запроса.");
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса", "Произведено " + checkUpdateCount + " попыток. При попытке обнолвения:  " + t.getMessage()));
-                    checkUpdateCount = 0;
-                }
-
-            }
-        });
+                    }
+                });
     }
 
-    public void setStage(Stage stage){
+    public void setStage(Stage stage) {
         this.primaryStage = stage;
     }
 }

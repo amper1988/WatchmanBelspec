@@ -1,7 +1,5 @@
 import interfaces.ChangerListener;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -45,9 +43,9 @@ public class ControllerFormReleaseByDebtAct implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         btnReleaseByDebtAct.setOnAction(actionEvent -> {
             {
-                if(confirmData()){
+                if (confirmData()) {
                     createReleaseByDebtAct();
-                }else{
+                } else {
                     Utils.showAlertMessage("Данные не заполнены", "Проверьте введенные данные");
                 }
             }
@@ -61,38 +59,38 @@ public class ControllerFormReleaseByDebtAct implements Initializable {
             @Override
             public void onResponse(Call<CreateReleaseByDebtActResponseEnvelope> call, final Response<CreateReleaseByDebtActResponseEnvelope> response) {
                 createReleaseByDebtActCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 1){
+                    if (serverAnswer.getCode() == 1) {
                         String documentString = response.body().getServerAnswer().getDescription();
                         try {
                             final File pdfFile = FileManager.createPdfFile();
                             FileOutputStream fos = new FileOutputStream(pdfFile.getPath());
-                            byte [] bytePDF = Converter.convertBase64StringToByteArray(documentString);
+                            byte[] bytePDF = Converter.convertBase64StringToByteArray(documentString);
                             fos.write(bytePDF);
                             fos.close();
                             Desktop.getDesktop().open(pdfFile);
                             DataChangeObserver.getInstance().dataChangeNotify();
                             Platform.runLater(() -> Utils.showAlertMessage("Успешно выдано по долговому акту", "Если файл не открылся автоматические его можно найти по пути: " + pdfFile.getAbsolutePath()));
-                            Platform.runLater(() -> ((Stage)btnReleaseByDebtAct.getScene().getWindow()).close());
+                            Platform.runLater(() -> ((Stage) btnReleaseByDebtAct.getScene().getWindow()).close());
                             listener.onChangeData();
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                     }
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<CreateReleaseByDebtActResponseEnvelope> call, final Throwable t) {
-                if(createReleaseByDebtActCount++ < Main.COUNT_RETRY){
+                if (createReleaseByDebtActCount++ < Main.COUNT_RETRY) {
                     createReleaseByDebtAct();
-                }else{
+                } else {
                     createReleaseByDebtActCount = 0;
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика отправления запроса", t.getMessage()));
                 }
@@ -101,17 +99,17 @@ public class ControllerFormReleaseByDebtAct implements Initializable {
         });
     }
 
-    public void setData(int identifier, ChangerListener listener){
+    public void setData(int identifier, ChangerListener listener) {
         this.listener = listener;
         this.identifier = identifier;
     }
 
-    private boolean confirmData(){
-        if(txtDebtActNumber.getText().isEmpty()){
+    private boolean confirmData() {
+        if (txtDebtActNumber.getText().isEmpty()) {
             txtDebtActNumber.requestFocus();
             return false;
         }
-        if(txtPoliceDepartmentReceiptNumber.getText().isEmpty()){
+        if (txtPoliceDepartmentReceiptNumber.getText().isEmpty()) {
             txtPoliceDepartmentReceiptNumber.requestFocus();
             return false;
         }

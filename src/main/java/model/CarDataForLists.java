@@ -17,7 +17,7 @@ public class CarDataForLists {
     private BooleanProperty block;
     private int indexInTable = -1;
 
-    public CarDataForLists(){
+    public CarDataForLists() {
         identifier = new SimpleIntegerProperty();
         manufacture = new SimpleStringProperty();
         model = new SimpleStringProperty();
@@ -31,6 +31,7 @@ public class CarDataForLists {
         status = new SimpleStringProperty();
         block = new SimpleBooleanProperty();
     }
+
     public int getIdentifier() {
         return identifier.get();
     }

@@ -1,11 +1,9 @@
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import utils.*;
+import utils.ScreenSize;
 
 import java.io.IOException;
 
@@ -13,14 +11,14 @@ public class FormCarDetails {
     private int identifier;
     private FormCarDetails app;
 
-    public void start(Stage primaryStage) throws IOException{
+    public void start(Stage primaryStage) throws IOException {
         app = this;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_car_details.fxml"));
         AnchorPane root = loader.load();
         ControllerFormCarDetails controllerFormCarDetails = loader.getController();
         root.setId("with_background");
         Stage stage;
-        if(primaryStage != null)
+        if (primaryStage != null)
             stage = primaryStage;
         else
             stage = new Stage();
@@ -38,7 +36,7 @@ public class FormCarDetails {
         this.identifier = identifier;
     }
 
-    public FormCarDetails(int identifier){
+    public FormCarDetails(int identifier) {
         this.identifier = identifier;
 
     }

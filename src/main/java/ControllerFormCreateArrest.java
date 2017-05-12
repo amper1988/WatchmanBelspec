@@ -1,7 +1,5 @@
 import interfaces.ChangerListener;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -23,7 +21,7 @@ import utils.Utils;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerFormCreateArrest implements Initializable, ChangerListener{
+public class ControllerFormCreateArrest implements Initializable, ChangerListener {
     @FXML
     private TextField txtWhoArrested;
     @FXML
@@ -41,9 +39,9 @@ public class ControllerFormCreateArrest implements Initializable, ChangerListene
     public void initialize(URL location, ResourceBundle resources) {
         selfLink = this;
         btnArrest.setOnAction(actionEvent -> {
-            if(confirmData()){
+            if (confirmData()) {
                 createArrest();
-            }else{
+            } else {
                 controllerFormCarDetails.blockUI(false, "");
                 Utils.showAlertMessage("Данные не заполнены", "Проверьте введенные данные.");
             }
@@ -58,50 +56,50 @@ public class ControllerFormCreateArrest implements Initializable, ChangerListene
             public void onResponse(Call<CreateArrestResponseEnvelope> call, final Response<CreateArrestResponseEnvelope> response) {
                 createArrestCount = 0;
                 controllerFormCarDetails.blockUI(false, "");
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 1){
+                    if (serverAnswer.getCode() == 1) {
                         Platform.runLater(() -> {
                             Utils.showAlertMessage("Успешно наложен арест", serverAnswer.getDescription());
                             DataChangeObserver.getInstance().dataChangeNotify();
                             controllerFormCarDetails.getActualData();
-                            ((Stage)btnArrest.getScene().getWindow()).close();
+                            ((Stage) btnArrest.getScene().getWindow()).close();
                         });
-                    }else if(serverAnswer.getCode() == 5){
+                    } else if (serverAnswer.getCode() == 5) {
                         Platform.runLater(() -> {
                             FormChooseOrganizationForArrest frm = new FormChooseOrganizationForArrest(identifier, txtWhoArrested.getText(), txtArrestReason.getText(), controllerFormCarDetails, selfLink);
                             frm.start(null);
                         });
 
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошбика ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                     }
-                }else {
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<CreateArrestResponseEnvelope> call, Throwable t) {
-                if(createArrestCount++ < Main.COUNT_RETRY){
+                if (createArrestCount++ < Main.COUNT_RETRY) {
                     createArrest();
-                }else{
+                } else {
                     createArrestCount = 0;
-                    Platform.runLater(()-> Utils.showAlertMessage("Ошбика при отправлении запроса", t.getMessage()));
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошбика при отправлении запроса", t.getMessage()));
                 }
             }
         });
     }
 
-    public void setData(int identifier, ControllerFormCarDetails controllerFormCarDetails){
+    public void setData(int identifier, ControllerFormCarDetails controllerFormCarDetails) {
         this.identifier = identifier;
         this.controllerFormCarDetails = controllerFormCarDetails;
     }
 
-    private boolean confirmData(){
-        if(txtArrestReason.getText().isEmpty())
+    private boolean confirmData() {
+        if (txtArrestReason.getText().isEmpty())
             return false;
-        if(txtWhoArrested.getText().isEmpty())
+        if (txtWhoArrested.getText().isEmpty())
             return false;
 
         return true;
@@ -110,6 +108,6 @@ public class ControllerFormCreateArrest implements Initializable, ChangerListene
     @Override
     public void onChangeData() {
         controllerFormCarDetails.getActualData();
-        ((Stage)btnArrest.getScene().getWindow()).close();
+        ((Stage) btnArrest.getScene().getWindow()).close();
     }
 }

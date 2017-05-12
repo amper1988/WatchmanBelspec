@@ -50,26 +50,28 @@ public class ControllerFormReleaseCar implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         btnReleaseCar.setOnAction(actionEvent -> {
-            if(confirmData() && identifier != -1){
+            if (confirmData() && identifier != -1) {
                 sendReleaseData();
             }
         });
     }
 
-    private boolean confirmData(){
-        if(txtBankReceiptNumber.getText().isEmpty()){
-            return false;        }
-        if(txtPoliceDepartmentReceiptNumber.getText().isEmpty()){
+    private boolean confirmData() {
+        if (txtBankReceiptNumber.getText().isEmpty()) {
+            return false;
+        }
+        if (txtPoliceDepartmentReceiptNumber.getText().isEmpty()) {
             return false;
         }
         return true;
     }
-    public void setIdentifier(int identifier, ControllerFormCarDetails controllerFormCarDetails){
+
+    public void setIdentifier(int identifier, ControllerFormCarDetails controllerFormCarDetails) {
         this.identifier = identifier;
         this.controllerFormCarDetails = controllerFormCarDetails;
     }
 
-    private void sendReleaseData(){
+    private void sendReleaseData() {
         controllerFormCarDetails.blockUI(true, "");
         RetrofitService retrofitService = Api.createRetrofitService();
         retrofitService.executeCreateRelease(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
@@ -77,10 +79,10 @@ public class ControllerFormReleaseCar implements Initializable {
             @Override
             public void onResponse(Call<CreateReleaseResponseEnvelope> call, final Response<CreateReleaseResponseEnvelope> response) {
                 releaseCount = 0;
-                if(response.code() == 200){
-                    controllerFormCarDetails.blockUI(false,"");
+                if (response.code() == 200) {
+                    controllerFormCarDetails.blockUI(false, "");
                     final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 1){
+                    if (serverAnswer.getCode() == 1) {
                         try {
                             final File pdfFile = FileManager.createPdfFile();
                             FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -88,7 +90,7 @@ public class ControllerFormReleaseCar implements Initializable {
                             fos.write(fileContent);
                             fos.close();
                             Desktop.getDesktop().open(pdfFile);
-                            Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                            Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             Platform.runLater(() -> close());
                             controllerFormCarDetails.getActualData();
                             DataChangeObserver.getInstance().dataChangeNotify();
@@ -96,7 +98,7 @@ public class ControllerFormReleaseCar implements Initializable {
                             e.printStackTrace();
                         }
 
-                    }else if(serverAnswer.getCode() == 5){
+                    } else if (serverAnswer.getCode() == 5) {
                         Platform.runLater(() -> {
                             Alert alertDialog = new Alert(Alert.AlertType.INFORMATION);
                             alertDialog.setTitle("Выберите действие");
@@ -110,30 +112,30 @@ public class ControllerFormReleaseCar implements Initializable {
                             alertDialog.getButtonTypes().addAll(buttonRecheck, buttonWithoutRecheck, buttonTypeCancel);
 
                             Optional<ButtonType> result = alertDialog.showAndWait();
-                            if(result.get() == buttonRecheck){
+                            if (result.get() == buttonRecheck) {
                                 sendRecheckReceipt();
-                            }else if(result.get() == buttonWithoutRecheck){
-                                if(confirmData()){
+                            } else if (result.get() == buttonWithoutRecheck) {
+                                if (confirmData()) {
                                     sendReleaseDataWithoutRecheck();
-                                }else{
+                                } else {
                                     Platform.runLater(() -> Utils.showAlertMessage("Данные не заполнены.", "Проверьте данные"));
                                 }
                             }
                         });
 
-                    }else{
-                        Platform.runLater(() -> Utils.showAlertMessage("Ответ сервера с ошибкой "+ serverAnswer.getCode(), serverAnswer.getDescription()));
+                    } else {
+                        Platform.runLater(() -> Utils.showAlertMessage("Ответ сервера с ошибкой " + serverAnswer.getCode(), serverAnswer.getDescription()));
                     }
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<CreateReleaseResponseEnvelope> call, final Throwable t) {
-                if(releaseCount++ < Main.COUNT_RETRY){
+                if (releaseCount++ < Main.COUNT_RETRY) {
                     btnReleaseCar.fire();
-                }else{
+                } else {
                     releaseCount = 0;
                     controllerFormCarDetails.blockUI(false, "");
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка при отправлении запроса.", t.getMessage()));
@@ -142,11 +144,11 @@ public class ControllerFormReleaseCar implements Initializable {
         });
     }
 
-    private void close(){
-        ((Stage)txtPoliceDepartmentReceiptNumber.getScene().getWindow()).close();
+    private void close() {
+        ((Stage) txtPoliceDepartmentReceiptNumber.getScene().getWindow()).close();
     }
 
-    private void sendReleaseDataWithoutRecheck(){
+    private void sendReleaseDataWithoutRecheck() {
         Platform.runLater(() -> controllerFormCarDetails.blockUI(true, ""));
         RetrofitService retrofitService = Api.createRetrofitService();
         retrofitService.executeCreateReleaseWithoutRecheck(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
@@ -155,9 +157,9 @@ public class ControllerFormReleaseCar implements Initializable {
             public void onResponse(Call<CreateReleaseWithoutRecheckResponseEnvelope> call, final Response<CreateReleaseWithoutRecheckResponseEnvelope> response) {
                 controllerFormCarDetails.blockUI(false, "");
                 withoutRecheckCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 1 ){
+                    if (serverAnswer.getCode() == 1) {
                         try {
                             final File pdfFile = FileManager.createPdfFile();
                             FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -165,26 +167,26 @@ public class ControllerFormReleaseCar implements Initializable {
                             fos.write(fileContent);
                             fos.close();
                             Desktop.getDesktop().open(pdfFile);
-                            Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                            Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             Platform.runLater(() -> close());
                             controllerFormCarDetails.getActualData();
                             DataChangeObserver.getInstance().dataChangeNotify();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера " + serverAnswer.getCode(), serverAnswer.getDescription()));
                     }
-                }else{
-                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+ response.code(), Converter.convertResponseToSting(response.errorBody())));
+                } else {
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<CreateReleaseWithoutRecheckResponseEnvelope> call, final Throwable t) {
-                if(withoutRecheckCount++ < Main.COUNT_RETRY){
+                if (withoutRecheckCount++ < Main.COUNT_RETRY) {
                     sendReleaseDataWithoutRecheck();
-                }else{
+                } else {
                     withoutRecheckCount = 0;
                     controllerFormCarDetails.blockUI(false, "");
                     Platform.runLater(() -> Utils.showAlertMessage("Ошбика при отправлении запроса.", t.getMessage()));
@@ -194,8 +196,8 @@ public class ControllerFormReleaseCar implements Initializable {
         });
     }
 
-    private void sendRecheckReceipt(){
-        Platform.runLater(() -> controllerFormCarDetails.blockUI(true,""));
+    private void sendRecheckReceipt() {
+        Platform.runLater(() -> controllerFormCarDetails.blockUI(true, ""));
         RetrofitService retrofitService = Api.createRetrofitService();
         retrofitService.executeCreateRecheckReceipt(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
                 new CreateRecheckReceiptRequestEnvelope(this.identifier)).enqueue(new Callback<CreateRecheckReceiptResponseEnvelope>() {
@@ -203,9 +205,9 @@ public class ControllerFormReleaseCar implements Initializable {
             public void onResponse(Call<CreateRecheckReceiptResponseEnvelope> call, final Response<CreateRecheckReceiptResponseEnvelope> response) {
                 Platform.runLater(() -> controllerFormCarDetails.blockUI(false, ""));
                 recheckCount = 0;
-                if(response.code() == 200){
+                if (response.code() == 200) {
                     final ServerAnswer serverAnswer = response.body().getServerAnswer();
-                    if(serverAnswer.getCode() == 1 ){
+                    if (serverAnswer.getCode() == 1) {
                         try {
                             final File pdfFile = FileManager.createPdfFile();
                             FileOutputStream fos = new FileOutputStream(pdfFile);
@@ -213,26 +215,26 @@ public class ControllerFormReleaseCar implements Initializable {
                             fos.write(fileContent);
                             fos.close();
                             Desktop.getDesktop().open(pdfFile);
-                            Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути "+ pdfFile.getAbsolutePath()));
+                            Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
                             Platform.runLater(() -> close());
                             controllerFormCarDetails.getActualData();
                             DataChangeObserver.getInstance().dataChangeNotify();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }else{
+                    } else {
                         Platform.runLater(() -> Utils.showAlertMessage("Ответ сервера содержит ошибку " + serverAnswer.getCode(), serverAnswer.getDescription()));
                     }
-                }else{
+                } else {
                     Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                 }
             }
 
             @Override
             public void onFailure(Call<CreateRecheckReceiptResponseEnvelope> call, final Throwable t) {
-                if(recheckCount++ < Main.COUNT_RETRY){
+                if (recheckCount++ < Main.COUNT_RETRY) {
                     sendRecheckReceipt();
-                }else{
+                } else {
                     recheckCount = 0;
                     Platform.runLater(() -> {
                         controllerFormCarDetails.blockUI(false, "");

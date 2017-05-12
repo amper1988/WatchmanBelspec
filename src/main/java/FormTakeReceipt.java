@@ -1,9 +1,7 @@
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import utils.ScreenSize;
 
@@ -14,15 +12,15 @@ public class FormTakeReceipt {
     private ControllerFormCarDetails controllerFormCarDetails = null;
     private String carId;
 
-    public void start(Stage primaryStage) throws IOException{
+    public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_create_receipt.fxml"));
         AnchorPane root = loader.load();
         root.setId("with_background");
         ControllerFormTakeReceipt controller = loader.getController();
         Stage stage;
-        if(primaryStage!=null){
+        if (primaryStage != null) {
             stage = primaryStage;
-        }else{
+        } else {
             stage = new Stage();
         }
         stage.setTitle("Электронный учет. Выствление счета.");
@@ -31,7 +29,7 @@ public class FormTakeReceipt {
         stage.setScene(scene);
         ScreenSize.getInstance().maximizedStage(stage);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("icon.png")));
-        if(identifier != -1) {
+        if (identifier != -1) {
             controller.setIdentifier(identifier, stage, controllerFormCarDetails, carId);
         }
 
@@ -39,13 +37,13 @@ public class FormTakeReceipt {
 
     }
 
-    public void setIdentifier(int identifier, ControllerFormCarDetails controllerFormCarDetails, String carId){
+    public void setIdentifier(int identifier, ControllerFormCarDetails controllerFormCarDetails, String carId) {
         this.identifier = identifier;
         this.controllerFormCarDetails = controllerFormCarDetails;
         this.carId = carId;
     }
 
-    public FormTakeReceipt(int identifier, ControllerFormCarDetails controllerFormCarDetails, String carId){
+    public FormTakeReceipt(int identifier, ControllerFormCarDetails controllerFormCarDetails, String carId) {
         this.identifier = identifier;
         this.controllerFormCarDetails = controllerFormCarDetails;
         this.carId = carId;

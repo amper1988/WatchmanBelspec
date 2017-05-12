@@ -11,15 +11,15 @@ public class FormCreatePoliceman {
     private ChangerListener listener;
     private String policeDepartment;
 
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_create_policeman.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormCreatePoliceman controllerFormCreatePoliceman = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
-            }else{
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Добавление сотрудника ГАИ");
@@ -33,7 +33,7 @@ public class FormCreatePoliceman {
 
     }
 
-    public FormCreatePoliceman(ChangerListener listener, String policeDepartment){
+    public FormCreatePoliceman(ChangerListener listener, String policeDepartment) {
         this.listener = listener;
         this.policeDepartment = policeDepartment;
     }

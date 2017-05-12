@@ -18,13 +18,16 @@ import retrofit.model.get_parking.response.GetParkingResponseEnvelope;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import utils.*;
+import utils.Converter;
+import utils.Encode;
+import utils.UserManager;
+import utils.Utils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ControllerSelectOwner implements Initializable{
+public class ControllerSelectOwner implements Initializable {
     @FXML
     private ComboBox<String> chbParking;
     @FXML
@@ -42,8 +45,8 @@ public class ControllerSelectOwner implements Initializable{
 
     private RetrofitService retrofitService;
 
-    private void getParking(){
-        try{
+    private void getParking() {
+        try {
             blockUI(true, "Получение списка стоянок");
             retrofitService = Api.createRetrofitService();
             retrofitService.executeGetParkingList(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
@@ -53,15 +56,15 @@ public class ControllerSelectOwner implements Initializable{
                     //unblock UI, because get response from server;
                     blockUI(false, "Список стоянок получен");
                     getParkingCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         //response is good;
                         GetParkingResponseEnvelope responseEnvelope = response.body();
                         Platform.runLater(() -> {
 
-                            new AutoCompleteBoxWithDep(chbParking, null , responseEnvelope.getBody().getParkingList());
+                            new AutoCompleteBoxWithDep(chbParking, null, responseEnvelope.getBody().getParkingList());
                             chbParking.requestFocus();
                         });
-                    }else{
+                    } else {
                         //response is bad;
                         txtResult.setText(Converter.convertResponseToSting(response.errorBody()));
                     }
@@ -70,20 +73,21 @@ public class ControllerSelectOwner implements Initializable{
                 @Override
                 public void onFailure(Call<GetParkingResponseEnvelope> call, Throwable t) {
                     //unblock UI because request is fail.
-                    if(getParkingCount++ < Main.COUNT_RETRY){
+                    if (getParkingCount++ < Main.COUNT_RETRY) {
                         getParking();
-                    }else{
+                    } else {
                         getParkingCount = 0;
                         blockUI(false, "Списко стоянок не получен.");
                         txtResult.setText(t.getMessage());
                     }
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             blockUI(false, "Общая ошибка");
             txtResult.setText(e.getMessage());
         }
     }
+
     @SuppressWarnings("unchecked")
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -92,86 +96,89 @@ public class ControllerSelectOwner implements Initializable{
         //go to server for get information about available parking for user;
         getParking();
         chbParking.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 btnNext.requestFocus();
         });
         //on event send to server information about user and his new parking;
         btnNext.setOnAction(event -> sendData());
         btnNext.addEventHandler(KeyEvent.KEY_RELEASED, event -> {
-            if(event.getCode() == KeyCode.ENTER)
+            if (event.getCode() == KeyCode.ENTER)
                 btnNext.fire();
         });
     }
 
-    private void sendData(){
+    private void sendData() {
         //block UI before going to server;
         blockUI(true, "Изменение данных о сотруднике.");
         //save information about parking in UserManager;
-        if(chbParking.getSelectionModel().isEmpty())
-            Platform.runLater(()-> Utils.showAlertMessage("Пустые данные", "Вероятно вы забыли выбрать стоянку"));
+        if (chbParking.getSelectionModel().isEmpty())
+            Platform.runLater(() -> Utils.showAlertMessage("Пустые данные", "Вероятно вы забыли выбрать стоянку"));
         else
             UserManager.getInstanse().setParking(chbParking.getSelectionModel().getSelectedItem());
-            //go to server and change parking for user to selected item;
-            retrofitService.executeChangeParkingOperation(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
-                    new ChangeParkingRequestEnvelope(UserManager.getInstanse().getmParking())).enqueue(new Callback<ChangeParkingResponseEnvelope>() {
-                @Override
-                public void onResponse(Call<ChangeParkingResponseEnvelope> call, final Response<ChangeParkingResponseEnvelope> response) {
-                    //unblock UI after taking response
+        //go to server and change parking for user to selected item;
+        retrofitService.executeChangeParkingOperation(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
+                new ChangeParkingRequestEnvelope(UserManager.getInstanse().getmParking())).enqueue(new Callback<ChangeParkingResponseEnvelope>() {
+            @Override
+            public void onResponse(Call<ChangeParkingResponseEnvelope> call, final Response<ChangeParkingResponseEnvelope> response) {
+                //unblock UI after taking response
 
-                    sendDataCount =0;
-                    if(response.code() == 200){
-                        //response is good;
-                        if(response.body().getServerAnswer().getCode() == 1){
-                            //response without errors from server;
-                            Platform.runLater(() -> {
-                                try{
-                                    //show watchman's form;
-                                    FormWatchman frm = new FormWatchman();
-                                    frm.start(primaryStage);
-                                }catch (IOException e ){
-                                    e.printStackTrace();
-                                }
-                            });
-                        } else {
-                            //response with errors from server;
-                            blockUI(false, "Ошибка при попытке изменить данные сотрудника.");
-                            Platform.runLater(() -> Utils.showAlertMessage("Error code: " + response.body().getServerAnswer().getCode(), response.body().getServerAnswer().getDescription()));
-                        }
-                    }else{
-                        //response is bad;
-                        blockUI(false, "Ошибка при попытке изменить данные сотрудника");
-                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка при попытке записать стоянку.", "Код ошибки: " + response.code()+
-                                "\n Описание ошибки: " + Converter.convertResponseToSting(response.errorBody())));
-                    }
-                }
-                @Override
-                public void onFailure(Call<ChangeParkingResponseEnvelope> call, final Throwable t) {
-                    if(sendDataCount++ < Main.COUNT_RETRY){
-                        sendData();
-                    }else{
-                        //unblock UI because request is fail;
-                        sendDataCount = 0;
-                        blockUI(false, "Ошибка при поытке изменить данные сотрудника.");
+                sendDataCount = 0;
+                if (response.code() == 200) {
+                    //response is good;
+                    if (response.body().getServerAnswer().getCode() == 1) {
+                        //response without errors from server;
                         Platform.runLater(() -> {
-                            if(t.getMessage().contains("null"))
-                                //contains null => argument 'parking' null;
-                                Utils.showAlertMessage("Fail reqest", "Вероятно вы забыли выбрать стоянку");
-                            else
-                                //request is fail;
-                                Utils.showAlertMessage("Fail request.", "Error: "+ t.getMessage());
+                            try {
+                                //show watchman's form;
+                                FormWatchman frm = new FormWatchman();
+                                frm.start(primaryStage);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         });
+                    } else {
+                        //response with errors from server;
+                        blockUI(false, "Ошибка при попытке изменить данные сотрудника.");
+                        Platform.runLater(() -> Utils.showAlertMessage("Error code: " + response.body().getServerAnswer().getCode(), response.body().getServerAnswer().getDescription()));
                     }
+                } else {
+                    //response is bad;
+                    blockUI(false, "Ошибка при попытке изменить данные сотрудника");
+                    Platform.runLater(() -> Utils.showAlertMessage("Ошибка при попытке записать стоянку.", "Код ошибки: " + response.code() +
+                            "\n Описание ошибки: " + Converter.convertResponseToSting(response.errorBody())));
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Call<ChangeParkingResponseEnvelope> call, final Throwable t) {
+                if (sendDataCount++ < Main.COUNT_RETRY) {
+                    sendData();
+                } else {
+                    //unblock UI because request is fail;
+                    sendDataCount = 0;
+                    blockUI(false, "Ошибка при поытке изменить данные сотрудника.");
+                    Platform.runLater(() -> {
+                        if (t.getMessage().contains("null"))
+                            //contains null => argument 'parking' null;
+                            Utils.showAlertMessage("Fail reqest", "Вероятно вы забыли выбрать стоянку");
+                        else
+                            //request is fail;
+                            Utils.showAlertMessage("Fail request.", "Error: " + t.getMessage());
+                    });
+                }
+            }
+        });
     }
+
     /**
      * Block or unblock UI components depends on "block" argument
-     * @param block  boolean (set "true" to block, set "false" to unblock)
+     *
+     * @param block boolean (set "true" to block, set "false" to unblock)
      */
-    private void blockUI(boolean block, String info){
-         if(block){
-            Platform.runLater(()->{
-                if(formLoading == null){
+    private void blockUI(boolean block, String info) {
+        if (block) {
+            Platform.runLater(() -> {
+                if (formLoading == null) {
                     formLoading = new FormLoading();
                 }
                 try {
@@ -180,9 +187,9 @@ public class ControllerSelectOwner implements Initializable{
                     e.printStackTrace();
                 }
             });
-        }else{
+        } else {
             Platform.runLater(() -> {
-                if(formLoading!= null){
+                if (formLoading != null) {
                     try {
                         formLoading.stop(info);
                     } catch (Exception e) {
@@ -198,7 +205,7 @@ public class ControllerSelectOwner implements Initializable{
         btnNext.setDisable(block);
     }
 
-    public void setStage(Stage stage){
+    public void setStage(Stage stage) {
         this.primaryStage = stage;
     }
 }

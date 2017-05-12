@@ -22,7 +22,7 @@ public class FileManager {
         return pdfFile;
     }
 
-    public static File createExeFile() throws IOException{
+    public static File createExeFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String exeFileName = "Exe_" + timeStamp + "_";
         String property = "java.io.tmpdir";

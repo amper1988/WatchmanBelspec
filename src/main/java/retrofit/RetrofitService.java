@@ -34,10 +34,10 @@ import retrofit.model.get_car_list_from_base.request.GetCarListFromBaseRequestEn
 import retrofit.model.get_car_list_from_base.response.GetCarListFromBaseResponseEnvelope;
 import retrofit.model.get_car_to_parking.request.GetCarToParkingRequestEnvelope;
 import retrofit.model.get_car_to_parking.response.GetCarToParkingResponseEnvelope;
-import retrofit.model.get_cars_on_parking.request.GetCarsOnParkingRequestEnvelope;
-import retrofit.model.get_cars_on_parking.response.GetCarsOnParkingResponseEnvelope;
 import retrofit.model.get_cars_on_evacuation.request.GetCarsOnEvacuationRequestEnvelope;
 import retrofit.model.get_cars_on_evacuation.response.GetCarsOnEvacuationResponseEnvelope;
+import retrofit.model.get_cars_on_parking.request.GetCarsOnParkingRequestEnvelope;
+import retrofit.model.get_cars_on_parking.response.GetCarsOnParkingResponseEnvelope;
 import retrofit.model.get_cars_on_paying.request.GetCarsOnPayingRequestEnvelope;
 import retrofit.model.get_cars_on_paying.response.GetCarsOnPayingResponseEnvelope;
 import retrofit.model.get_clauses.request.GetClausesRequestEnvelope;

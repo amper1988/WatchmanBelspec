@@ -20,37 +20,58 @@ public class AutoCompleteBoxWithDep {
     public AutoCompleteBoxWithDep(ComboBox<String> cmbMain, ComboBox<String> cmbSecend, List<? extends ItemWithDepends> itemList) {
         this.cmbMain = cmbMain;
         this.cmbSecend = cmbSecend;
-        if(cmbSecend != null)
-            this.cmbSecend.setVisible(false);
         this.itemList = itemList;
-        for(ItemWithDepends item : itemList){
+        for (ItemWithDepends item : itemList) {
             mainElements.add(item.getName());
         }
         cmbMain.setItems(FXCollections.observableArrayList(mainElements));
         cmbMain.setEditable(true);
+        String selectedString = cmbMain.getSelectionModel().getSelectedItem();
+        cmbMain.getSelectionModel().select(selectedString);
+        if (cmbSecend != null) {
+            if (cmbMain.getSelectionModel().isEmpty()) {
+                this.cmbSecend.setVisible(false);
+                this.cmbSecend.getItems().clear();
+            } else {
+                this.cmbSecend.setVisible(true);
+                ItemWithDepends selectedItem = null;
+                if (this.itemList != null) {
+                    for (ItemWithDepends item : this.itemList) {
+                        if (item.getName().equals(selectedString)) {
+                            selectedItem = item;
+                        }
+                    }
+                    if (selectedItem != null) {
+                        cmbSecend.setItems(FXCollections.observableArrayList(selectedItem.getDependElements()));
+                    }
+                }
+            }
+
+        }
+
         cmbMain.getEditor().setOnKeyReleased(event -> {
-            if(event.getCode() == KeyCode.DOWN) {
+            if (event.getCode() == KeyCode.DOWN) {
                 cmbMain.show();
-            }else if(event.getCode() == KeyCode.UP){
+            } else if (event.getCode() == KeyCode.UP) {
                 cmbMain.show();
-            }else{
-                String searchString  = (cmbMain.getEditor().getText() + Utils.returnSymbol(event.getCharacter())).toLowerCase();
+            } else {
+                String searchString = (cmbMain.getEditor().getText() + Utils.returnSymbol(event.getCharacter())).toLowerCase();
                 final List<String> foundList = new ArrayList<>();
-                if(this.itemList != null){
-                    for(ItemWithDepends item: this.itemList){
-                        if(item.getName().toLowerCase().contains(searchString)){
+                if (this.itemList != null) {
+                    for (ItemWithDepends item : this.itemList) {
+                        if (item.getName().toLowerCase().contains(searchString)) {
                             foundList.add(item.getName());
                         }
                     }
-                }else{
+                } else {
                     foundList.add("");
                 }
                 cmbMain.getItems().clear();
                 cmbMain.setItems(FXCollections.observableArrayList(foundList));
                 cmbMain.show();
-                if(searchString.equals("") || searchString.equals(" ")){
-                    if(cmbSecend != null){
-                        if(cmbSecend.getItems() != null){
+                if (searchString.equals("") || searchString.equals(" ")) {
+                    if (cmbSecend != null) {
+                        if (cmbSecend.getItems() != null) {
                             cmbSecend.getItems().clear();
                         }
                         cmbSecend.setVisible(false);
@@ -59,27 +80,27 @@ public class AutoCompleteBoxWithDep {
             }
         });
         cmbMain.getEditor().setOnKeyTyped(event -> {
-            if(event.getCharacter().hashCode() == 13){
-                if(cmbSecend != null)
+            if (event.getCharacter().hashCode() == 13) {
+                if (cmbSecend != null)
                     cmbSecend.requestFocus();
             }
         });
         cmbMain.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(cmbSecend != null    )
+            if (cmbSecend != null)
                 cmbSecend.setVisible(true);
             ItemWithDepends selectedItem = null;
-            if(this.itemList!=null){
-                for(ItemWithDepends item : this.itemList){
-                    if(item.getName().equals(newValue)){
+            if (this.itemList != null) {
+                for (ItemWithDepends item : this.itemList) {
+                    if (item.getName().equals(newValue)) {
                         selectedItem = item;
                     }
                 }
-                if(selectedItem!= null) {
-                    if(cmbSecend != null)
+                if (selectedItem != null) {
+                    if (cmbSecend != null)
                         cmbSecend.setItems(FXCollections.observableArrayList(selectedItem.getDependElements()));
-                }else {
+                } else {
                     cmbMain.setItems(FXCollections.observableArrayList(this.mainElements));
-                    if(cmbSecend != null){
+                    if (cmbSecend != null) {
                         cmbSecend.getItems().clear();
                         cmbSecend.setVisible(false);
                     }
@@ -88,10 +109,10 @@ public class AutoCompleteBoxWithDep {
             }
         });
         cmbMain.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(!newValue){
-                if(cmbMain.getSelectionModel().isEmpty() && !cmbMain.getEditor().getText().equals("")){
-                    if(cmbSecend != null){
-                        if(cmbSecend.getItems() != null){
+            if (!newValue) {
+                if (cmbMain.getSelectionModel().isEmpty() && !cmbMain.getEditor().getText().equals("")) {
+                    if (cmbSecend != null) {
+                        if (cmbSecend.getItems() != null) {
                             cmbSecend.getItems().clear();
                         }
                         cmbSecend.setVisible(false);
@@ -100,9 +121,9 @@ public class AutoCompleteBoxWithDep {
                     Utils.showAlertMessage("Выберите значение", "Значение не выбрано.");
                     cmbMain.requestFocus();
                 }
-                if(cmbMain.getEditor().getText().equals("")){
-                    if(cmbSecend != null){
-                        if(cmbSecend.getItems() != null){
+                if (cmbMain.getEditor().getText().equals("")) {
+                    if (cmbSecend != null) {
+                        if (cmbSecend.getItems() != null) {
                             cmbSecend.getItems().clear();
                         }
                         cmbSecend.setVisible(false);
@@ -111,16 +132,16 @@ public class AutoCompleteBoxWithDep {
                 }
             }
         });
-        if(cmbSecend != null)
+        if (cmbSecend != null)
             cmbSecend.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
                 KeyCode code = event.getCode();
-                if(code == KeyCode.UP){
+                if (code == KeyCode.UP) {
                     cmbSecend.show();
                 }
-                if(code == KeyCode.DOWN){
+                if (code == KeyCode.DOWN) {
                     cmbSecend.show();
                 }
-                if(code == KeyCode.ESCAPE || code == KeyCode.BACK_SPACE || code == KeyCode.DELETE){
+                if (code == KeyCode.ESCAPE || code == KeyCode.BACK_SPACE || code == KeyCode.DELETE) {
                     cmbSecend.getSelectionModel().clearSelection();
                     cmbSecend.hide();
                 }

@@ -20,9 +20,8 @@ public class Api {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
-                .readTimeout(3600, TimeUnit.SECONDS)
-                .writeTimeout(3600, TimeUnit.SECONDS)
-                .connectTimeout(3600,  TimeUnit.SECONDS);
+                .readTimeout(25, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS);
         httpClientBuilder.addInterceptor(interceptor);
         Retrofit restAdapter = new Retrofit.Builder()
                 .baseUrl("")

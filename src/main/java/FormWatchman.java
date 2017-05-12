@@ -1,18 +1,14 @@
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import utils.ScreenSize;
 import utils.UserManager;
 
 import java.io.IOException;
 
-public class FormWatchman{
+public class FormWatchman {
     private ControllerFormWatchman controller;
 
     public void start(Stage primaryStage) throws IOException {
@@ -21,9 +17,9 @@ public class FormWatchman{
         AnchorPane parent = loader.load();
         parent.setId("with_background");
         controller = loader.getController();
-        if(primaryStage!=null){
+        if (primaryStage != null) {
             stage = primaryStage;
-        }else{
+        } else {
             stage = new Stage();
         }
         stage.setTitle("Электронный учет. Текущий пользователь: " + UserManager.getInstanse().getmFullName());
@@ -43,8 +39,7 @@ public class FormWatchman{
     }
 
     public void stop() throws Exception {
-        if(controller != null)
-        {
+        if (controller != null) {
             controller.setWindowClosed();
         }
 

@@ -44,7 +44,7 @@ public class ControllerFormImageFull implements Initializable {
     private int identifier = -1;
     private int index = -1;
     private FormLoading formLoading = null;
-    private Stage  primaryStage;
+    private Stage primaryStage;
 
     private int getImageCount = 0;
 
@@ -82,11 +82,11 @@ public class ControllerFormImageFull implements Initializable {
 
     }
 
-    public void setData(int identifier, int index, Stage primaryStage){
+    public void setData(int identifier, int index, Stage primaryStage) {
         this.identifier = identifier;
         this.index = index;
         this.primaryStage = primaryStage;
-        if(identifier != -1 || index != -1){
+        if (identifier != -1 || index != -1) {
             blockUI(true, "Получение данных с сервера.");
             RetrofitService retrofitService = Api.createRetrofitService();
             retrofitService.executeGetImageFull(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
@@ -95,25 +95,25 @@ public class ControllerFormImageFull implements Initializable {
                 public void onResponse(Call<GetImageFullResponseEnvelope> call, final Response<GetImageFullResponseEnvelope> response) {
                     blockUI(false, "Данные успешно получены.");
                     getImageCount = 0;
-                    if(response.code() == 200){
+                    if (response.code() == 200) {
                         final int serverCode = response.body().getAnswer().getCode();
-                        if(serverCode == 1){
+                        if (serverCode == 1) {
                             Platform.runLater(() -> setImage(Converter.convertBase64StringToImage(response.body().getAnswer().getDescription())));
-                        }else{
-                            Platform.runLater(() -> Utils.showAlertMessage("Ответ сервера содержит ошибку "+ serverCode, response.body().getAnswer().getDescription()));
+                        } else {
+                            Platform.runLater(() -> Utils.showAlertMessage("Ответ сервера содержит ошибку " + serverCode, response.body().getAnswer().getDescription()));
                         }
 
-                    }else{
-                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера "+response.code(), Converter.convertResponseToSting(response.errorBody())));
+                    } else {
+                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
                     }
 
                 }
 
                 @Override
                 public void onFailure(Call<GetImageFullResponseEnvelope> call, final Throwable t) {
-                    if(getImageCount++ < Main.COUNT_RETRY){
+                    if (getImageCount++ < Main.COUNT_RETRY) {
                         setData(identifier, index, primaryStage);
-                    }else{
+                    } else {
                         getImageCount = 0;
                         blockUI(false, "Ошибка при отправлении запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка при отправлении запроса.", t.getMessage()));
@@ -123,10 +123,10 @@ public class ControllerFormImageFull implements Initializable {
         }
     }
 
-    private void blockUI(boolean block, String info){
-        if(block){
-            Platform.runLater(()->{
-                if(formLoading == null){
+    private void blockUI(boolean block, String info) {
+        if (block) {
+            Platform.runLater(() -> {
+                if (formLoading == null) {
                     formLoading = new FormLoading();
                     try {
                         formLoading.start(primaryStage, info);
@@ -135,9 +135,9 @@ public class ControllerFormImageFull implements Initializable {
                     }
                 }
             });
-        }else{
+        } else {
             Platform.runLater(() -> {
-                if(formLoading != null){
+                if (formLoading != null) {
                     try {
                         formLoading.stop(info);
                     } catch (Exception e) {
@@ -152,7 +152,7 @@ public class ControllerFormImageFull implements Initializable {
         vbFull.setVisible(!block);
     }
 
-    private void setImage(Image imv){
+    private void setImage(Image imv) {
         imvImage.setFitWidth(imv.getWidth());
         imvImage.setFitHeight(imv.getHeight());
         imvImage.setImage(imv);

@@ -18,12 +18,12 @@ public class FormUncheckArrest implements ChangerListener {
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("form_uncheck_arrest.fxml"));
         try {
-            Parent root = (Parent)loader.load();
+            Parent root = (Parent) loader.load();
             ControllerFormUncheckArrest controllerFormUncheckArrest = loader.getController();
             Stage stage;
-            if(primaryStage == null){
+            if (primaryStage == null) {
                 stage = new Stage();
-            }else{
+            } else {
                 stage = primaryStage;
             }
             stage.setTitle("Электронный учет. Снятие ареста.");
@@ -38,14 +38,14 @@ public class FormUncheckArrest implements ChangerListener {
 
     }
 
-    public FormUncheckArrest(int identifier, ChangerListener listener){
+    public FormUncheckArrest(int identifier, ChangerListener listener) {
         this.identifier = identifier;
         this.listener = listener;
     }
 
     @Override
     public void onChangeData() {
-        if(listener!=null){
+        if (listener != null) {
             listener.onChangeData();
         }
     }
