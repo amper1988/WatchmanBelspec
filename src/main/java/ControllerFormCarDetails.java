@@ -33,6 +33,8 @@ import retrofit.model.get_receipt.request.GetReceiptRequestEnvelope;
 import retrofit.model.get_receipt.response.GetReceiptResponseEnvelope;
 import retrofit.model.get_release_information.request.GetReleaseInformationRequestEnvelope;
 import retrofit.model.get_release_information.response.GetReleaseInformationResponseEnvelope;
+import retrofit.model.get_voucher.request.GetVoucherRequestEnvelope;
+import retrofit.model.get_voucher.response.GetVoucherResponseEnvelope;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -191,6 +193,8 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
     private Button btnTakeFromAnotherParking;
     @FXML
     private Button btnReleaseByDebtAct;
+    @FXML
+    private Button btnTakeVoucher;
 
     private int returnToParkingCount = 0;
     private int getDebtActCount = 0;
@@ -199,6 +203,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
     private int takeReleaseInformationCount = 0;
     private int takePhotosCount = 0;
     private int getActualDataCount = 0;
+    private int getVoucherCount = 0;
 
     private int identifier = -1;
     private Stage primaryStage = null;
@@ -318,6 +323,51 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                         btnTakeDebtAct.fire();
                     } else {
                         getDebtActCount = 0;
+                        blockUI(false, "Ошбика отправления запроса.");
+                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
+                    }
+
+                }
+            });
+        });
+
+        btnTakeVoucher.setOnAction(actionEvent -> {
+            blockUI(true, "Получение квитанции о приеме денежных средств");
+            RetrofitService retrofitService = Api.createRetrofitService();
+            retrofitService.executeGetVoucher(Encode.getBasicAuthTemplate(UserManager.getInstanse().getmLogin(), UserManager.getInstanse().getmPassword()),
+                    new GetVoucherRequestEnvelope(identifier)).enqueue(new Callback<GetVoucherResponseEnvelope>() {
+                @Override
+                public void onResponse(Call<GetVoucherResponseEnvelope> call, final Response<GetVoucherResponseEnvelope> response) {
+                    blockUI(false, "Данные успешно получены с сервера.");
+                    getVoucherCount = 0;
+                    if (response.code() == 200) {
+                        if (response.body().getServerAnswer().getCode() == 1) {
+                            try {
+                                final File pdfFile = FileManager.createPdfFile();
+                                FileOutputStream fos = new FileOutputStream(pdfFile);
+                                byte[] fileContent = Converter.convertBase64StringToByteArray(response.body().getServerAnswer().getDescription());
+                                fos.write(fileContent);
+                                fos.close();
+                                Desktop.getDesktop().open(pdfFile);
+                                Platform.runLater(() -> Utils.showAlertMessage("Запрос выполнен успешно", "Если документ не открылся автоматически то его можно найти по пути " + pdfFile.getAbsolutePath()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Platform.runLater(() -> Utils.showAlertMessage("Ошибка ответа сервера " + response.body().getServerAnswer().getCode(), response.body().getServerAnswer().getDescription()));
+                        }
+                    } else {
+                        Platform.runLater(() -> Utils.showAlertMessage("Ошибка сервера " + response.code(), Converter.convertResponseToSting(response.errorBody())));
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<GetVoucherResponseEnvelope> call, final Throwable t) {
+                    if (getVoucherCount++ < Main.COUNT_RETRY) {
+                        btnTakeVoucher.fire();
+                    } else {
+                        getVoucherCount = 0;
                         blockUI(false, "Ошбика отправления запроса.");
                         Platform.runLater(() -> Utils.showAlertMessage("Ошибка отправления запроса", t.getMessage()));
                     }
@@ -641,6 +691,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 btnTakeReceipt.setDisable(true);
                 btnTakeReleaseInformation.setDisable(true);
                 btnTakePhotos.setDisable(false);
+                btnTakeVoucher.setDisable(true);
 
                 break;
             case "На оплате":
@@ -660,6 +711,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 btnTakeReceipt.setDisable(false);
                 btnTakeReleaseInformation.setDisable(true);
                 btnTakePhotos.setDisable(false);
+                btnTakeVoucher.setDisable(false);
                 break;
             case "На перемещении":
                 vbOwnerData.setVisible(false);
@@ -679,6 +731,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 btnTakeReceipt.setDisable(true);
                 btnTakeReleaseInformation.setDisable(true);
                 btnTakePhotos.setDisable(false);
+                btnTakeVoucher.setDisable(true);
                 break;
 
             case "Выдано":
@@ -696,6 +749,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 btnTakeReceipt.setDisable(false);
                 btnTakeReleaseInformation.setDisable(false);
                 btnTakePhotos.setDisable(false);
+                btnTakeVoucher.setDisable(false);
                 break;
 
             case "Выдано по долговому акту":
@@ -713,6 +767,7 @@ public class ControllerFormCarDetails implements Initializable, ImageContextMenu
                 btnTakeReceipt.setDisable(false);
                 btnTakeReleaseInformation.setDisable(false);
                 btnTakePhotos.setDisable(false);
+                btnTakeVoucher.setDisable(true);
                 break;
 
         }

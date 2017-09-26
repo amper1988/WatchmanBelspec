@@ -1016,6 +1016,11 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </VBox.margin>
                                           </Button>
+                                          <Button fx:id="btnTakeVoucher" mnemonicParsing="false" prefWidth="200.0" text="Квитанция о получении денежных средств">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </VBox.margin>
+                                          </Button>
                                           <Button fx:id="btnTakeReleaseInformation" mnemonicParsing="false" prefWidth="200.0" text="Печать информации о выдаче">
                                              <VBox.margin>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

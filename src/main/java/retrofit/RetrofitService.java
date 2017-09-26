@@ -82,6 +82,8 @@ import retrofit.model.get_release_information.request.GetReleaseInformationReque
 import retrofit.model.get_release_information.response.GetReleaseInformationResponseEnvelope;
 import retrofit.model.get_released_cars.request.GetReleasedCarsRequestEnvelope;
 import retrofit.model.get_released_cars.response.GetReleasedCarsResponseEnvelope;
+import retrofit.model.get_voucher.request.GetVoucherRequestEnvelope;
+import retrofit.model.get_voucher.response.GetVoucherResponseEnvelope;
 import retrofit.model.test_connection.request.TestRequestEnvelope;
 import retrofit.model.test_connection.response.TestResponseEnvelope;
 import retrofit2.Call;
@@ -278,4 +280,11 @@ public interface RetrofitService {
 
     @POST("ws/getdata")
     Call<GetPoliceDepartmentResponseEnvelope> executeGetPoliceDepartment(@Header("Authorization") String auth, @Body GetPoliceDepartmentRequestEnvelope request);
+
+    @Headers({
+            "Content-Type: application/soap+xml",
+            "Accept-Charset: utf-8"
+    })
+    @POST("ws/getData")
+    Call<GetVoucherResponseEnvelope> executeGetVoucher(@Header("Authorization") String auth, @Body GetVoucherRequestEnvelope request);
 }
