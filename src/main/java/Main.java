@@ -9,7 +9,7 @@ import utils.ScreenSize;
 import java.io.IOException;
 
 public class Main extends Application {
-    public static final String VERSION = "1.0.0.5";
+    public static final String VERSION = "1.0.0.6";
     public static final int COUNT_RETRY = 5;
 
     public static void main(String[] args) {
